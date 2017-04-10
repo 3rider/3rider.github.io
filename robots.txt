@@ -1,1 +1,1 @@
-Sitemap: /sitemap.xml
+Sitemap: https://3rider.com/sitemap.xml
