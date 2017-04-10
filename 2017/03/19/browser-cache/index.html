@@ -1,0 +1,41 @@
+<html><head><title>Rider</title><meta charset="UTF8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.6.0/styles/github.min.css"/><script src="//cdn.bootcss.com/highlight.js/9.6.0/highlight.min.js"></script><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/><script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/css/tether.min.css"/><script src="https://code.jquery.com/jquery-3.2.0.min.js" integrity="sha256-JAW99MJVpJBGcbzEuXk4Az05s/XyDdBomFqNlM3ic+I=" crossorigin="anonymous"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.0/anime.min.js"></script><link rel="stylesheet" href="/css/style.css"></head><body><div class="site-wrap"><nav class="navbar navbar-light topnav"><a class="navbar-brand"><i class="fa fa-bars fa-2x" id="topnav-toggle"></i></a></nav><header class="container" id="site-header"><a class="brand" href="/"><img src="/img/logo.svg"/></a><div class="search"><div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control" id="autocomplete" type="text" placeholder="搜尋文章／內容／標籤？"/></div></div></header><div class="container post"><h1 class="title">管理網頁緩存原來可以很簡單！</h1><p><p>瀏覽器緩存是<a href="https://en.wikipedia.org/wiki/Web_cache" target="_blank" rel="external">web cache</a>的一種，主要作用就是緩存靜態的檔案，降低下次請求時的流量，所以這個設計對於數據傅輸速度不快的移動裝置用家非常有用，可是緩存處理不當會另理應需要更新的檔案無法更新，降低了用家的體驗，以下就來看看解決的方法！<br>&nbsp;</p>
+<h2 id="一﹒手動清除緩存"><a href="#一﹒手動清除緩存" class="headerlink" title="一﹒手動清除緩存"></a>一﹒手動清除緩存</h2><p>這方法只會清除本地緩存，是給開發者的方法，以Chrome做例子，最簡單的做法就是按<code>F12</code>開啟console，在<code>更新按鈕</code>上按<code>右鍵</code>，便會出現<code>Empty Cache and Hard Reload</code>的選項，其他瀏覽器可以參考<a href="http://www.refreshyourcache.com/en/home/" target="_blank" rel="external">這篇文章</a><br><img src="https://i0.wp.com/3rider.com/wp-content/uploads/2017/02/chrome-cache.png" alt=""><br>&nbsp;</p>
+<h2 id="二﹒伺服器設定"><a href="#二﹒伺服器設定" class="headerlink" title="二﹒伺服器設定"></a>二﹒伺服器設定</h2><p>我們可以在伺服器設定<strong>永遠不緩存</strong>，事先聲明，這<strong>不是一個好方法</strong>，緩存有很多好處，所以<strong>盡量不要用</strong>這方法吧！以下的例子都是參考<a href="http://stackoverflow.com/questions/49547/how-to-control-web-page-caching-across-all-browsers" target="_blank" rel="external">這篇QA</a>的，我們只要將伺服器的HTTP header設定成這樣，下次就不會有緩存了…</p>
+<p></p><p class="code-caption" data-lang="bash" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="bash">Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+Expires: 0
+</code></pre>
+<p>以下是一些常用的設定</p>
+<ol>
+<li>Node.js<br><p class="code-caption" data-lang="js" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><pre><code class="js">res.header(&#39;Cache-Control&#39;, &#39;no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0&#39;);
+</code></pre>
+</li>
+<li>PHP<br><p class="code-caption" data-lang="php" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><pre><code class="php">header(&quot;Cache-Control: no-cache, no-store, must-revalidate&quot;); // HTTP 1.1.
+header(&quot;Pragma: no-cache&quot;); // HTTP 1.0.
+header(&quot;Expires: 0&quot;); // Proxies.
+</code></pre>
+</li>
+<li>Nginx<br><p class="code-caption" data-lang="bash" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><pre><code class="bash">add_header Cache-Control no-cache;
+</code></pre>
+</li>
+<li>Apache<br><p class="code-caption" data-lang="bash" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><pre><code class="bash">Header set Cache-Control &quot;no-cache, no-store, must-revalidate&quot;
+Header set Pragma &quot;no-cache&quot;
+Header set Expires 0
+</code></pre>
+</li>
+</ol>
+<p>&nbsp;</p>
+<h2 id="三﹒利用cache-busting"><a href="#三﹒利用cache-busting" class="headerlink" title="三﹒利用cache busting"></a>三﹒利用cache busting</h2><p>另外一個方法是<a href="https://css-tricks.com/strategies-for-cache-busting-css/" target="_blank" rel="external">cache busting</a> ，也是比較好的做法，特別適用於vendor.js、app.js這類經常會改動原碼，但不會改變名稱的檔案，透過增加一個額外的<code>query字串</code>，讓瀏覽器判斷這個檔案需要更新，這樣就可以保留緩存功能又能防止誤判的情況</p>
+<p></p><p class="code-caption" data-lang="html" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="html">&lt;script src=&quot;app.js?v=1&quot;&gt;&lt;/script&gt;
+</code></pre>
+<p>&nbsp;<br>除了加版本，我們還可以增加一個<code>timestamp字串</code>，效果基本上等於沒有緩存，但這個方法還是比修改伺服器的設定好，因為我們可以只控制個別不想做緩存檔案，而不是全部不使用</p>
+<p></p><p class="code-caption" data-lang="html" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="html">&lt;script&gt;
+  document.write(&quot;&lt;script src=\&quot;app.js?v=&quot; + new Date().getTime() + &quot;\&quot;&gt;&lt;\/script&gt;&quot;);
+&lt;/script&gt;
+</code></pre>
+<p>&nbsp;</p>
+<h2 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h2><p>有時候很多這些細微的東西很容易會被忽略掉，遇到的時候又用不正規的方法處理掉，花點時間研究一下，其實很容易就可以解決了！</p>
+</p><p><p>No related post.</p></p></div></div><footer id="site-footer"><div class="container"><div class="row"><div class="col-lg-6 col-md-12 col-sm-12"><img src="/img/logo-inverse.png"/><p>人不應該渴望不勞而獲，正所謂辛苦過後吃的飯特別香，付出過後收獲自然也比別人豐盛。寫這個網誌是為了拯救一眾Rider，讓他們重新做人而不再被一時怠惰迷惑，也是為了時常警惕自己，要超越人類，成為不勞而獲也能夠吃到美味的飯的神！</p></div><div class="col-md-6"></div></div></div></footer><script src="/js/vendor.js"></script><script src="/js/script.js"></script><script src="http://127.0.0.1:35729/livereload.js?snipver=1"></script></body></html>

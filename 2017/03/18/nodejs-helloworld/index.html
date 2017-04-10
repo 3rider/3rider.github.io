@@ -1,0 +1,29 @@
+<html><head><title>Rider</title><meta charset="UTF8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.6.0/styles/github.min.css"/><script src="//cdn.bootcss.com/highlight.js/9.6.0/highlight.min.js"></script><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/><script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/css/tether.min.css"/><script src="https://code.jquery.com/jquery-3.2.0.min.js" integrity="sha256-JAW99MJVpJBGcbzEuXk4Az05s/XyDdBomFqNlM3ic+I=" crossorigin="anonymous"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.0/anime.min.js"></script><link rel="stylesheet" href="/css/style.css"></head><body><div class="site-wrap"><nav class="navbar navbar-light topnav"><a class="navbar-brand"><i class="fa fa-bars fa-2x" id="topnav-toggle"></i></a></nav><header class="container" id="site-header"><a class="brand" href="/"><img src="/img/logo.svg"/></a><div class="search"><div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control" id="autocomplete" type="text" placeholder="搜尋文章／內容／標籤？"/></div></div></header><div class="container post"><h1 class="title">Node.js簡易安裝教學</h1><p><p>Node.js已經流行一段時間了，越來越多工作要求懂得Node.js，還未學會就趕快安裝一個追上潮流吧！<br>&nbsp;</p>
+<h2 id="一﹒安裝NVM"><a href="#一﹒安裝NVM" class="headerlink" title="一﹒安裝NVM"></a>一﹒安裝NVM</h2><p>使用<a href="https://github.com/creationix/nvm" target="_blank" rel="external">NVM（Node Version Manager）</a>其中一個好處就是容易安裝，官方的實在太麻煩了…另一個好處是可以<strong>隨時切換版本</strong>，可能現在你還不明白，等到你長大後自然就會懂了（謎の聲：你是我老爸嗎？）</p>
+<p></p><p class="code-caption" data-lang="bash" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="bash">curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.0/install.sh | bash`
+
+export NVM_DIR=&quot;$HOME/.nvm&quot;
+[ -s &quot;$NVM_DIR/nvm.sh&quot; ] &amp;&amp; . &quot;$NVM_DIR/nvm.sh&quot; # This loads nvm
+</code></pre>
+<p>&nbsp;</p>
+<h2 id="二﹒安裝Node-js"><a href="#二﹒安裝Node-js" class="headerlink" title="二﹒安裝Node.js"></a>二﹒安裝Node.js</h2><p>然後我們就可以用NVM安裝Node.js了，我們可以用<code>ls-remote</code>查詢可以安裝的版本，沒特別要求就用LTS（Long term support）版本吧</p>
+<p></p><p class="code-caption" data-lang="bash" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="bash">nvm ls-remote
+nvm install 6
+</code></pre>
+<p>&nbsp;</p>
+<h2 id="三﹒編寫第一個Hello-World程式"><a href="#三﹒編寫第一個Hello-World程式" class="headerlink" title="三﹒編寫第一個Hello World程式"></a>三﹒編寫第一個Hello World程式</h2><p>學一種語言最快的方法就是Hello World了，隨意到一個地方建立<code>index.js</code>，裡面輸入</p>
+<p></p><p class="code-caption" data-lang="js" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="js">console.log(&#39;hello world!&#39;)
+</code></pre>
+<p>最後開啟你的Terminal，執行node index.js看結果吧！</p>
+<p></p><p class="code-caption" data-lang="bash" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="bash">node index.js
+</code></pre>
+<p>&nbsp;</p>
+<h2 id="四﹒解決Node-JS-Error-ENOSPC的問題"><a href="#四﹒解決Node-JS-Error-ENOSPC的問題" class="headerlink" title="四﹒解決Node.JS Error: ENOSPC的問題"></a>四﹒解決Node.JS Error: ENOSPC的問題</h2><p>這是初次裝Node.js很常見的問題，在Terminal執行以下指令就可以解決了</p>
+<p></p><p class="code-caption" data-lang="bash" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="bash">echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf &amp;&amp; sudo sysctl -p
+</code></pre>
+</p><p><p>No related post.</p></p></div></div><footer id="site-footer"><div class="container"><div class="row"><div class="col-lg-6 col-md-12 col-sm-12"><img src="/img/logo-inverse.png"/><p>人不應該渴望不勞而獲，正所謂辛苦過後吃的飯特別香，付出過後收獲自然也比別人豐盛。寫這個網誌是為了拯救一眾Rider，讓他們重新做人而不再被一時怠惰迷惑，也是為了時常警惕自己，要超越人類，成為不勞而獲也能夠吃到美味的飯的神！</p></div><div class="col-md-6"></div></div></div></footer><script src="/js/vendor.js"></script><script src="/js/script.js"></script><script src="http://127.0.0.1:35729/livereload.js?snipver=1"></script></body></html>

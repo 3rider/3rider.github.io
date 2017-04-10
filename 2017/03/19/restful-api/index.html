@@ -1,0 +1,110 @@
+<html><head><title>Rider</title><meta charset="UTF8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.6.0/styles/github.min.css"/><script src="//cdn.bootcss.com/highlight.js/9.6.0/highlight.min.js"></script><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/><script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/css/tether.min.css"/><script src="https://code.jquery.com/jquery-3.2.0.min.js" integrity="sha256-JAW99MJVpJBGcbzEuXk4Az05s/XyDdBomFqNlM3ic+I=" crossorigin="anonymous"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.0/anime.min.js"></script><link rel="stylesheet" href="/css/style.css"></head><body><div class="site-wrap"><nav class="navbar navbar-light topnav"><a class="navbar-brand"><i class="fa fa-bars fa-2x" id="topnav-toggle"></i></a></nav><header class="container" id="site-header"><a class="brand" href="/"><img src="/img/logo.svg"/></a><div class="search"><div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control" id="autocomplete" type="text" placeholder="搜尋文章／內容／標籤？"/></div></div></header><div class="container post"><h1 class="title">輕鬆學習RESTful API，人見人愛的簡約設計！</h1><p><p>REST是一種風格，RESTful API則是符合REST風格的API，正所謂<strong>less is more</strong>，REST完美地表這個精神，但是跟隨這風格一點也不簡單，要成為人見人愛的REST開發者，就應該更小心不要犯常見的錯誤<br>&nbsp;</p>
+<h2 id="一﹒５個常用Method"><a href="#一﹒５個常用Method" class="headerlink" title="一﹒５個常用Method"></a>一﹒５個常用Method</h2><p>RESTful API常用的method有五種</p>
+<ul>
+<li>GET - 取得資料</li>
+<li>POST - 寫入或增加資料</li>
+<li>PUT - 更新整個資料</li>
+<li>PATCH - 更新資料裡面的一部分</li>
+<li>DELETE - 刪除資料</li>
+</ul>
+<p>&nbsp;</p>
+<h2 id="二﹒常犯錯誤１：不要用錯Method！"><a href="#二﹒常犯錯誤１：不要用錯Method！" class="headerlink" title="二﹒常犯錯誤１：不要用錯Method！"></a>二﹒常犯錯誤１：不要用錯Method！</h2><p>上面指出的５個method已經是最基本的了，不要再讓自己局限於GET、POST兩種，要緊記API是<strong>讓別人看</strong>的，RESTful的原意是<strong>stateless</strong>，是<strong>不需要有協議</strong>也能很容易知道如果使用，這方面必須用對method才能達到這個目的，以下列出一個簡單的CRUD例子</p>
+<p><strong>取得生果清單</strong></p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>GET /fruits
+</code></pre><p><strong>取得生果清單裡面的蘋果</strong>，假設蘋果的<code>id</code>是1</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>GET /fruits/1
+</code></pre><p><strong>增加橘子到生果清單</strong></p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>POST /fruits
+{
+  id: 2,
+  name: &quot;Orange&quot;,
+  description: &quot;This is an orange&quot;
+}
+</code></pre><p><strong>更新橘子的description</strong>，用<code>PATCH</code>的意義就是只改部份，而不會進行覆蓋，以下例子就是只改<code>description</code>而不改<code>name</code></p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>PATCH /fruits/2
+{
+  description: &quot;This is a juicy orange&quot;
+}
+</code></pre><p>  <strong>把橘子的record變成梨子</strong>，因為我們用<code>PUT</code>，所以這裡連原有的<code>description</code>也會被覆蓋掉了</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>PUT /fruits/2
+{
+  name: &quot;Pear&quot;
+}
+</code></pre><p><strong>刪除蘋果</strong></p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>DELETE /fruits/1
+</code></pre><p>&nbsp;</p>
+<h2 id="三﹒常犯錯誤２：不要胡亂命名"><a href="#三﹒常犯錯誤２：不要胡亂命名" class="headerlink" title="三﹒常犯錯誤２：不要胡亂命名"></a>三﹒常犯錯誤２：不要胡亂命名</h2><p>原因同上，RESTful API的URL不應該出現動詞，所以<strong>不要這樣寫</strong></p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>GET /getFruits
+</code></pre><p>另外不是unique的話請緊記用<strong>複數</strong>命名，所以也<strong>不要這樣寫</strong></p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>GET /frust
+</code></pre><p>所以應該寫成這樣才正確</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>GET /fruits
+</code></pre><p>&nbsp;</p>
+<h2 id="四﹒利用Sub-resource表示關聯性"><a href="#四﹒利用Sub-resource表示關聯性" class="headerlink" title="四﹒利用Sub resource表示關聯性"></a>四﹒利用Sub resource表示關聯性</h2><p>這個設計可以令使用者逐層探索你的API，以下就是一個常見的例子，首先我們取得<code>product</code>的清單</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>GET /products
+</code></pre><pre><code>[
+  {
+    id: 1,
+    name: &quot;fruits&quot;
+  },
+  {
+    id: 2,
+    name: &quot;drinks&quot;
+  }
+]
+</code></pre><p>  由於是一個複數的請求，所以我們會取得一個<code>Array</code>，而清單入面不會有太多資料，我們只知道有<code>fruits</code>和<code>drinks</code>可以選擇，我們就選擇<code>fruits</code>看看</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>GET /products/1
+</code></pre><pre><code>{
+  id: 1,
+  name: &quot;fruits&quot;,
+  items: [
+    {
+      id: 1,
+      name: &quot;apple&quot;
+    },
+    {
+      id: 2,
+      name: &quot;orange&quot;
+    }
+  ]
+}
+</code></pre><p>在<code>fruits</code>裡面我們想看橘子的資料，所以我們這樣請求</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>GET /products/1/items/2
+</code></pre><pre><code>{
+  id: 1,
+  name: &quot;orange&quot;,
+  description: &quot;This is an orange&quot;
+}
+</code></pre><p>到這樣有沒有發現哪裡怪怪的？沒有發現嗎？請繼續往下看吧！<br>&nbsp;</p>
+<h2 id="五﹒使用HATEOAS"><a href="#五﹒使用HATEOAS" class="headerlink" title="五﹒使用HATEOAS"></a>五﹒使用HATEOAS</h2><p><a href="https://en.wikipedia.org/wiki/HATEOAS" target="_blank" rel="external">HATEOAS</a> 是其中一種RESTful API的條件，之前不是提到REST是一種<code>stateless</code>的設計嗎？那麼上面的例子裡由選擇生果的時候開始便是<strong>用猜</strong>的方式去取得<code>sub resource</code>的，這不是一個很好的練習，所以我們要用HATEOAS，我們可以加插<code>link</code>，讓使用者知道如何查詢下一層的資料，以下是改善後的例子</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>GET /products
+</code></pre><pre><code>[
+  {
+    id: 1,
+    name: &quot;fruits&quot;,
+    _links: {
+      self: {
+        href: &quot;/products/1&quot;
+      }
+    }
+  }
+]
+</code></pre><p>&nbsp;</p>
+<h2 id="六﹒給你的API一個版本"><a href="#六﹒給你的API一個版本" class="headerlink" title="六﹒給你的API一個版本"></a>六﹒給你的API一個版本</h2><p>最後來談一下版本的問題，雖然跟REST沒太大關係，但加版本是一個不錯的練習，因為將來即使一點小改動都可能會影響到現有的用家，所以最好的情況就是開始的時候便加入版本例如叫<code>v1</code>，以後有不能向後兼容的情況便增一個<code>v2</code>的API</p>
+<pre><code>GET /api/v1/products
+</code></pre><p>&nbsp;</p>
+<h2 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h2><p>說到底REST都只是一種風格，就算不跟隨也不會影響API的功能，如果不喜歡也沒關係，但有時候我們不一定是開發的那方，也會有使用的時候，經常認識一下一些趨勢相信必定是有利無害的！</p>
+</p><p><p>No related post.</p></p></div></div><footer id="site-footer"><div class="container"><div class="row"><div class="col-lg-6 col-md-12 col-sm-12"><img src="/img/logo-inverse.png"/><p>人不應該渴望不勞而獲，正所謂辛苦過後吃的飯特別香，付出過後收獲自然也比別人豐盛。寫這個網誌是為了拯救一眾Rider，讓他們重新做人而不再被一時怠惰迷惑，也是為了時常警惕自己，要超越人類，成為不勞而獲也能夠吃到美味的飯的神！</p></div><div class="col-md-6"></div></div></div></footer><script src="/js/vendor.js"></script><script src="/js/script.js"></script><script src="http://127.0.0.1:35729/livereload.js?snipver=1"></script></body></html>

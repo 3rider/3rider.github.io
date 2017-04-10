@@ -1,0 +1,79 @@
+<html><head><title>Rider</title><meta charset="UTF8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.6.0/styles/github.min.css"/><script src="//cdn.bootcss.com/highlight.js/9.6.0/highlight.min.js"></script><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/><script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/css/tether.min.css"/><script src="https://code.jquery.com/jquery-3.2.0.min.js" integrity="sha256-JAW99MJVpJBGcbzEuXk4Az05s/XyDdBomFqNlM3ic+I=" crossorigin="anonymous"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.0/anime.min.js"></script><link rel="stylesheet" href="/css/style.css"></head><body><div class="site-wrap"><nav class="navbar navbar-light topnav"><a class="navbar-brand"><i class="fa fa-bars fa-2x" id="topnav-toggle"></i></a></nav><header class="container" id="site-header"><a class="brand" href="/"><img src="/img/logo.svg"/></a><div class="search"><div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control" id="autocomplete" type="text" placeholder="搜尋文章／內容／標籤？"/></div></div></header><div class="container post"><h1 class="title">Gulp的簡易使用教學</h1><p><p>Gulp這神器完全是為了我們這懶人而設的，用了它之後開發速度快了一倍以上！而且它精簡的結構是其它工具（Grunt、Webpack…）無法與之相比的，以下為大家介紹常用的功能<br>&nbsp;</p>
+<h2 id="一﹒安裝Gulp"><a href="#一﹒安裝Gulp" class="headerlink" title="一﹒安裝Gulp"></a>一﹒安裝Gulp</h2><p>Gulp需要Node.js才能運作，沒有Node可以看這篇<a href="/posts/26">Node安裝教學</a>，然後再用NPM安裝Gulp</p>
+<p></p><p class="code-caption" data-lang="bash" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="bash">npm install gulp -g
+</code></pre>
+<p>&nbsp;</p>
+<h2 id="二﹒gulpfile-js設定檔"><a href="#二﹒gulpfile-js設定檔" class="headerlink" title="二﹒gulpfile.js設定檔"></a>二﹒gulpfile.js設定檔</h2><p>Gulp會自動讀取路徑內的<code>gulpfile.{ext}</code>設定檔，而這個檔案需要自行建立，我們先建立<code>gulpfile.js</code></p>
+<p></p><p class="code-caption" data-lang="bash" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="bash">touch gulpfile.js
+</code></pre>
+<p>&nbsp;</p>
+<h2 id="三﹒使用Gulp指令"><a href="#三﹒使用Gulp指令" class="headerlink" title="三﹒使用Gulp指令"></a>三﹒使用Gulp指令</h2><p>之前我們在全域安裝了gulp，所以我們可以在<code>Terminal</code>內用<code>gulp</code>的指令，指令是根據<code>gulpfile.js</code>內的<code>task</code>（任務）而定的，所以我們可以自行加入新指令，很方便吧？默認的指令是<code>default</code></p>
+<p></p><p class="code-caption" data-lang="js" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="js">var gulp = require(&#39;gulp&#39;);
+
+gulp.task(&#39;default&#39;, function () {
+  console.log(&#39;Hello!&#39;);
+});
+</code></pre>
+<p>現在我們還未可以執行指令，我們需要在路徑內再次安裝<code>gulp</code></p>
+<p></p><p class="code-caption" data-lang="bash" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="bash">npm install gulp
+</code></pre>
+<p>到這裡終於可以執行了！輸入<code>gulp</code>運行默認的<code>task</code></p>
+<p></p><p class="code-caption" data-lang="bash" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="bash">gulp
+</code></pre>
+<p>輸出大概是這樣</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>[13:29:26] Using gulpfile ~/projects/gulp-example/gulpfile.js
+[13:29:26] Starting &#39;default&#39;...
+Hello!
+[13:29:26] Finished &#39;default&#39; after 104 μs
+</code></pre><p>&nbsp;</p>
+<h2 id="四﹒自定指令名稱"><a href="#四﹒自定指令名稱" class="headerlink" title="四﹒自定指令名稱"></a>四﹒自定指令名稱</h2><p>當然我們可以自定指令的名稱，除了<code>default</code>以外的<code>task</code>都會以<code>gulp {task}</code>的指令運作，就以上的例子我們改成這裡</p>
+<p></p><p class="code-caption" data-lang="js" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="js">var gulp = require(&#39;gulp&#39;);
+
+gulp.task(&#39;greeting&#39;, function () {
+  console.log(&#39;Hello!&#39;);
+});
+</code></pre>
+<p>我們把<code>task</code>改成<code>greeting</code>，換言之指令就會變成這樣</p>
+<p></p><p class="code-caption" data-lang="bash" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="bash">gulp greeting
+</code></pre>
+<p>&nbsp;</p>
+<h2 id="五﹒三個主要函数"><a href="#五﹒三個主要函数" class="headerlink" title="五﹒三個主要函数"></a>五﹒三個主要函数</h2><ol>
+<li>Source<br>設定來源的<code>globs</code>，可以用<code>Array</code>包含多個<code>globs</code>，亦可以用<code>!</code>排除<br><p class="code-caption" data-lang="js" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><pre><code class="js">gulp.src(&#39;index.js&#39;);
+gulp.src(&#39;**/*.js&#39;);
+gulp.src([&#39;**/*.js&#39;, &#39;!index.js&#39;])
+</code></pre>
+&nbsp;</li>
+<li>Pipeline<br>包含了主要的工作，例如編譯scss然後minify，這些都需要額外模組執行<br><p class="code-caption" data-lang="js" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><pre><code class="js">gulp.src(&#39;scss/*.scss&#39;)
+ .pipe(scss())
+ .pipe(minify());
+</code></pre>
+&nbsp;</li>
+<li>Destination<br>設定輸出位置<br><p class="code-caption" data-lang="js" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><pre><code class="js">gulp.src(&#39;scss/*.scss&#39;)
+ .pipe(scss())
+ .pipe(minify())
+ .pipe(gulp.dest(&#39;build/css&#39;));
+</code></pre>
+&nbsp;</li>
+</ol>
+<h2 id="六﹒常用的Gulp插件"><a href="#六﹒常用的Gulp插件" class="headerlink" title="六﹒常用的Gulp插件"></a>六﹒常用的Gulp插件</h2><p>Gulp的插件真的非常多沒辦法逐一介紹，以下列出一些我常用的插件讓大家參考</p>
+<ul>
+<li><a href="https://www.npmjs.com/package/gulp-watch" target="_blank" rel="external">gulp-watch</a></li>
+<li><a href="https://www.npmjs.com/package/gulp-plumber" target="_blank" rel="external">gulp-plumber</a></li>
+<li><a href="https://www.npmjs.com/package/gulp-connect" target="_blank" rel="external">gulp-connect</a></li>
+<li><a href="https://www.npmjs.com/package/gulp-livereload" target="_blank" rel="external">gulp-livereload</a></li>
+<li><a href="https://www.npmjs.com/package/gulp-sass" target="_blank" rel="external">gulp-sass</a></li>
+<li><a href="https://www.npmjs.com/package/gulp-sourcemaps" target="_blank" rel="external">gulp-sourcemaps</a></li>
+<li><a href="https://www.npmjs.com/package/gulp-uglify" target="_blank" rel="external">gulp-uglify</a></li>
+<li><a href="https://www.npmjs.com/package/gulp-clean-css" target="_blank" rel="external">gulp-clean-css</a></li>
+<li><a href="https://www.npmjs.com/package/gulp-concat" target="_blank" rel="external">gulp-concat</a></li>
+<li><a href="https://www.npmjs.com/package/gulp-concat-css" target="_blank" rel="external">gulp-concat-css</a></li>
+</ul>
+</p><p><p>No related post.</p></p></div></div><footer id="site-footer"><div class="container"><div class="row"><div class="col-lg-6 col-md-12 col-sm-12"><img src="/img/logo-inverse.png"/><p>人不應該渴望不勞而獲，正所謂辛苦過後吃的飯特別香，付出過後收獲自然也比別人豐盛。寫這個網誌是為了拯救一眾Rider，讓他們重新做人而不再被一時怠惰迷惑，也是為了時常警惕自己，要超越人類，成為不勞而獲也能夠吃到美味的飯的神！</p></div><div class="col-md-6"></div></div></div></footer><script src="/js/vendor.js"></script><script src="/js/script.js"></script><script src="http://127.0.0.1:35729/livereload.js?snipver=1"></script></body></html>

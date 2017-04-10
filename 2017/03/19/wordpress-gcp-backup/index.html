@@ -1,0 +1,159 @@
+<html><head><title>Rider</title><meta charset="UTF8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.6.0/styles/github.min.css"/><script src="//cdn.bootcss.com/highlight.js/9.6.0/highlight.min.js"></script><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/><script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/css/tether.min.css"/><script src="https://code.jquery.com/jquery-3.2.0.min.js" integrity="sha256-JAW99MJVpJBGcbzEuXk4Az05s/XyDdBomFqNlM3ic+I=" crossorigin="anonymous"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.0/anime.min.js"></script><link rel="stylesheet" href="/css/style.css"></head><body><div class="site-wrap"><nav class="navbar navbar-light topnav"><a class="navbar-brand"><i class="fa fa-bars fa-2x" id="topnav-toggle"></i></a></nav><header class="container" id="site-header"><a class="brand" href="/"><img src="/img/logo.svg"/></a><div class="search"><div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control" id="autocomplete" type="text" placeholder="搜尋文章／內容／標籤？"/></div></div></header><div class="container post"><h1 class="title">Wordpress備份自己做，從Google VM直接備份至Cloud Storage！</h1><p><p>CMS有不少備份工具可以選擇，尤其是Wordpress這類歷史悠久的CMS，備份插件之多讓你無從入手，但是很多插件工具都<strong>不是免費</strong>讓你使用的，特別是備份到Google Cloud Storage（GCS）這類較新的空間，目前只找到一個最像樣的由<a href="https://updraftplus.com/" target="_blank" rel="external">UpdraftPlus</a>提供的插件，它支援GCS的收費是<strong>每個網域$15美金</strong>，雖然價錢還算合理，但工程師的自尊不容許我沒試過便直接付錢買下去（<del datetime="2017-03-08T15:28:22+00:00">雖然最後還是買了</del>），所以花了點下班休息時間自己試做一下。<br>&nbsp;</p>
+<h2 id="一﹒準備工作"><a href="#一﹒準備工作" class="headerlink" title="一﹒準備工作"></a>一﹒準備工作</h2><p>這次還是用我熟悉的Node.js，沒有Node可以到<a href="https://3rider.com/%E5%BE%9E%E9%9B%B6%E9%96%8B%E5%A7%8B%E5%AE%89%E8%A3%9Dnode-js%EF%BC%8C%E7%B7%A8%E5%AF%AB%E7%AC%AC%E4%B8%80%E5%80%8Bhello-world%EF%BC%81/" target="_blank" rel="external">這裡看看</a>安裝方法，而且這次是直接從VM備份到GSC，所以很方便不需要credential認證</p>
+<ul>
+<li>安裝好Node.js</li>
+<li>一個Google的VM instance</li>
+<li>Google Cloud Platform（GCP）開放Storage服務權限</li>
+<li>一個GSC Bucket</li>
+</ul>
+<p>&nbsp;</p>
+<h2 id="二﹒開放VM服務範圍（scope）"><a href="#二﹒開放VM服務範圍（scope）" class="headerlink" title="二﹒開放VM服務範圍（scope）"></a>二﹒開放VM服務範圍（scope）</h2><p>先到你的VM控制面版，拉到最下面查看啟動了的服務，如果顯示是這樣，表示已經啟動所有權限了，所以請跳過這步驟<br><img src="https://3rider.com/wp-content/uploads/2017/03/google-vm-4.png" alt=""></p>
+<p>如果<strong>Storage</strong>狀態是<code>Enable</code>，也可跳過這步驟，但是如果跟下圖一樣只有讀取（Read Only）權限便要繼續進行設定<br><img src="https://3rider.com/wp-content/uploads/2017/03/google-vm-2.png" alt=""></p>
+<p>假設你的VM沒有開啟Storage權限，先按Stop關掉你的VM，然後按Edit編輯VM的設置<br><img src="https://3rider.com/wp-content/uploads/2017/03/google-vm-1.png" alt=""></p>
+<p>我個人是蠻怕麻煩的，反正有防火牆，所以便直接開啟所有服務權限，最後儲存再重啟你的VM便完成了<br><img src="https://3rider.com/wp-content/uploads/2017/03/google-vm-3.png" alt=""></p>
+<p>&nbsp;</p>
+<h2 id="三﹒編寫備份程式"><a href="#三﹒編寫備份程式" class="headerlink" title="三﹒編寫備份程式"></a>三﹒編寫備份程式</h2><p>怎樣建立一個project就不多說了，可以直接到<a href="https://github.com/3rider/wp-gcp-backup" target="_blank" rel="external">我的GitHub</a>下載原碼<br>&nbsp;<br><strong>NPM模組</strong></p>
+<p></p><p class="code-caption" data-lang="json" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="json">&quot;dependencies&quot;: {
+    &quot;@google-cloud/storage&quot;: &quot;^0.7.0&quot;,
+    &quot;adm-zip&quot;: &quot;^0.4.7&quot;,
+    &quot;archiver&quot;: &quot;^1.3.0&quot;,
+    &quot;bluebird&quot;: &quot;^3.5.0&quot;,
+    &quot;cron&quot;: &quot;^1.2.1&quot;,
+    &quot;fast-crc32c&quot;: &quot;^1.0.4&quot;,
+    &quot;moment&quot;: &quot;^2.17.1&quot;,
+    &quot;mysqldump&quot;: &quot;^1.3.1&quot;
+}
+</code></pre>
+<p>&nbsp;<br>CoffeeScript原碼</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>_         = require &#39;lodash&#39; 
+fs        = require &#39;fs&#39;
+path      = require &#39;path&#39;
+moment    = require &#39;moment&#39;
+archiver  = require &#39;archiver&#39;
+mysqlDump = require &#39;mysqldump&#39;
+Promise   = require &#39;bluebird&#39;
+CronJob   = require(&#39;cron&#39;).CronJob
+
+# GCP
+gcs = require(&#39;@google-cloud/storage&#39;)()
+bucket = gcs.bucket &#39;MY-GCS-BUCKET&#39; # Your bucket name
+
+# Params
+timezone      = &#39;Asia/Hong_Kong&#39; # Cron job timezone
+cronInterval  = &#39;0 0 4 * * *&#39; # Run every day at 4a.m.
+bakFilename   = &quot;backup-#{moment().format(&quot;YYYYMMDDHH&quot;)}.zip&quot;
+
+# Config
+config =
+  out: &quot;#{__dirname}/#{bakFilename}&quot; # Temporary zipped backup path
+  wordpress:
+    dir: &#39;/var/www/html/wp&#39; # Wordpress root dir
+  mysql:
+    host: &#39;localhost&#39;
+    user: &#39;root&#39;
+    password: &#39;&#39;
+    database: &#39;wp&#39;
+    dest: &quot;#{__dirname}/wp.sql&quot; # Temporary sql dump file path
+
+# Dump Mysql
+backupMysql = -&gt;
+  return new Promise (rs, rj) -&gt;
+    mysqlDump config.mysql, (err) -&gt;
+      return rj err if err?
+      rs config.mysql.dest
+
+# Backup Wordpress with MySQL
+createZip = (sqlPath) -&gt;
+  return new Promise (rs, rj) -&gt;
+    output  = fs.createWriteStream config.out
+    archive = archiver &#39;zip&#39;,
+      store: true
+      cwd: &#39;wordpress&#39;
+    archive.pipe output
+
+    # Listener
+    output.on &#39;close&#39;, -&gt;
+      console.log &quot;#{archive.pointer()} total bytes&quot;
+      return rs()
+
+    output.on &#39;error&#39;, (err) -&gt;
+      return rj err
+
+    # Add SQL Dump
+    archive.file sqlPath,
+      name: &quot;#{config.mysql.database}.sql&quot;
+
+    # Add Wordpress Directories
+    archive.directory config.wordpress.dir, &#39;/wordpress&#39;
+
+    # Finalize Zip
+    archive.finalize()
+
+# Push to Google Cloud Storage
+pushToGCS = -&gt;
+  return new Promise (rs, rj) -&gt;
+    file = bucket.file bakFilename
+    fs
+      .createReadStream config.out
+      .pipe file.createWriteStream({ gzip: true })
+      .on &#39;error&#39;, (err) -&gt;
+        return rj err
+      .on &#39;finish&#39;, -&gt;
+        console.log &#39;Pushed to GCS&#39;
+        return rs()
+
+# Cron Job
+job = new CronJob 
+  cronTime: cronInterval
+  onTick: -&gt;
+    console.log &#39;Dumping MySQL database...&#39;
+    backupMysql()
+      .then (sqlPath) -&gt;
+        console.log &#39;Zipping Wordpress directory...&#39;
+        return createZip sqlPath
+      .then -&gt;
+        console.log &quot;Pushing #{bakFilename} to Google cloud storage...&quot;
+        return pushToGCS()
+      .then -&gt;
+        console.log &#39;Backup success!&#39;
+      .catch (err) -&gt;
+        console.error err
+      .finally -&gt;
+        console.log &#39;Deleting local backup files...&#39;
+        try
+          fs.unlinkSync config.out
+          fs.unlinkSync config.mysql.dest
+  start: false
+  timezone: timezone
+
+# Start Job
+job.start()
+console.log &#39;Monitoring...&#39;
+</code></pre><p>&nbsp;<br>簡略說明一下，首先<code># GCP</code>用作設定GCS的bucket名稱，請<strong>預先在GCS建立一個bucket</strong>，這篇沒有包括建立bucket的教程；<code># Params</code>進行cron job的設定，預設了<strong>每天凌晨四點</strong>進行備份；而<code># Config</code>則設定了MySQL的連接資料，請自行修改這些設定，最後每次作業的先後次序是：</p>
+<ol>
+<li>備份MySQL</li>
+<li>把剛備份好的MySQL連同Wordpress壓縮到<code>config.out</code>內指定的位置</li>
+<li>把壓縮檔傳送至設定好的bucket內</li>
+<li>最後刪除本地的備份檔案</li>
+</ol>
+<p>&nbsp;</p>
+<h2 id="四﹒運行"><a href="#四﹒運行" class="headerlink" title="四﹒運行"></a>四﹒運行</h2><p>權限設定好了，程式也有了，再來就是運行的部份了，這裡建議大家使用<a href="https://github.com/Unitech/pm2" target="_blank" rel="external">pm2</a>，它是一個強大的Node管理系統</p>
+<pre><code>npm install pm2 -g
+</code></pre><p>安裝好了以後用<code>pm2</code>執行index.coffee，順便為程序命名</p>
+<p></p><p class="code-caption" data-lang="bash" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="bash">pm2 start index.coffee --name wp-backup
+</code></pre>
+<p>然後只要等到設定好的時間，系統便會自動進行備份了，運行的log大概是以下這樣，成功了便可以到GCS查看上傳了的備份檔案</p>
+<pre><code>Monitoring...
+Dumping MySQL database...
+Zipping Wordpress directory...
+3811909 total bytes
+Pushing backup-2017030900.zip to Google cloud storage...
+Pushed to GCS
+Backup success!
+Deleting local backup files...
+</code></pre><p>&nbsp;</p>
+<h2 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h2><p>到最後就如上面提及到，我還是買了UpdraftPlus的插件，因為我用的是最便宜VM，而沒記錯它只有0.6GB記憶體和1個共用核心，所以基本上運行了LEMP以後也沒剩多少資源讓我再運行一個Node.js的程序了，這是我花了幾小時設定好以上所有東西以後才發覺的，無奈我不是很熟悉PHP啊…</p>
+</p><p><p>No related post.</p></p></div></div><footer id="site-footer"><div class="container"><div class="row"><div class="col-lg-6 col-md-12 col-sm-12"><img src="/img/logo-inverse.png"/><p>人不應該渴望不勞而獲，正所謂辛苦過後吃的飯特別香，付出過後收獲自然也比別人豐盛。寫這個網誌是為了拯救一眾Rider，讓他們重新做人而不再被一時怠惰迷惑，也是為了時常警惕自己，要超越人類，成為不勞而獲也能夠吃到美味的飯的神！</p></div><div class="col-md-6"></div></div></div></footer><script src="/js/vendor.js"></script><script src="/js/script.js"></script><script src="http://127.0.0.1:35729/livereload.js?snipver=1"></script></body></html>

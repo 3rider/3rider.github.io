@@ -1,0 +1,34 @@
+<html><head><title>Rider</title><meta charset="UTF8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.6.0/styles/github.min.css"/><script src="//cdn.bootcss.com/highlight.js/9.6.0/highlight.min.js"></script><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/><script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/css/tether.min.css"/><script src="https://code.jquery.com/jquery-3.2.0.min.js" integrity="sha256-JAW99MJVpJBGcbzEuXk4Az05s/XyDdBomFqNlM3ic+I=" crossorigin="anonymous"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.0/anime.min.js"></script><link rel="stylesheet" href="/css/style.css"></head><body><div class="site-wrap"><nav class="navbar navbar-light topnav"><a class="navbar-brand"><i class="fa fa-bars fa-2x" id="topnav-toggle"></i></a></nav><header class="container" id="site-header"><a class="brand" href="/"><img src="/img/logo.svg"/></a><div class="search"><div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control" id="autocomplete" type="text" placeholder="搜尋文章／內容／標籤？"/></div></div></header><div class="container post"><h1 class="title">Highcharts的一個Async Drilldown實例</h1><p><p><a href="http://www.highcharts.com/" target="_blank" rel="external">Highcharts</a>在使用簡易度和功能上在眾多圖表工具之中是比較平均的一個，而它的<a href="http://www.highcharts.com/docs/chart-concepts/drilldown" target="_blank" rel="external">drilldown功能</a>是其中一個讓我選擇使用它的原因，drilldown的概念就像是<strong>逐層探索</strong>數據，由一個big picture再進入較細緻的部份，要顯示這樣的數據就需要像Highcharts這樣的工具協助了<br>&nbsp;</p>
+<h2 id="事前準備"><a href="#事前準備" class="headerlink" title="事前準備"></a>事前準備</h2><p>以下的例子用了這些模組</p>
+<ul>
+<li><a href="http://www.highcharts.com/download" target="_blank" rel="external">Highcharts 5.0.9</a></li>
+<li><a href="http://jquery.com/download/" target="_blank" rel="external">jQuery 3.1.1</a></li>
+<li>drilldown.js（包含在Highcharts的zip內）</li>
+</ul>
+<p>&nbsp;</p>
+<h2 id="基本Drilldown"><a href="#基本Drilldown" class="headerlink" title="基本Drilldown"></a>基本Drilldown</h2><p>以下是一個用Highcharts建立的pie chart，試試點進去<code>水果</code>或是<code>飲品</code>的區域，試用一下drilldown功能吧</p>
+<p></p><p data-height="270" data-theme-id="27846" data-slug-hash="PpKLJQ" data-default-tab="js,result" data-user="auphone" data-embed-version="2" data-pen-title="Highcharts Normal Drilldown" class="codepen">See the Pen <a href="http://codepen.io/auphone/pen/PpKLJQ/" target="_blank" rel="external">Highcharts Normal Drilldown</a> by auphone (<a href="http://codepen.io/auphone" target="_blank" rel="external">@auphone</a>) on <a href="http://codepen.io" target="_blank" rel="external">CodePen</a>.</p><p></p>
+<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
+
+<p>&nbsp;</p>
+<h2 id="為甚麼要用Async？"><a href="#為甚麼要用Async？" class="headerlink" title="為甚麼要用Async？"></a>為甚麼要用Async？</h2><p>為甚麼我們要用Async drilldown呢？無論你叫它Async還是Lazy Load，目的一樣也是差不多的：</p>
+<ul>
+<li>讓頁面能較快初始化</li>
+<li>減少客戶端流量</li>
+<li>減少伺服器流量</li>
+<li>預防request size過大的問題</li>
+<li>更靈活</li>
+</ul>
+<p>&nbsp;</p>
+<h2 id="Async-Drilldown"><a href="#Async-Drilldown" class="headerlink" title="Async Drilldown"></a>Async Drilldown</h2><p>當然用Async有好處也有壞處，如果圖表只有兩層，或許用一次request取得所有數據或許是比較好的方案，因為即時請求會比較慢，而且開發也比較麻煩，但試想像一個五層、甚至十層以上的圖表，每次初始化的時候就等於<strong>多讀取了十倍</strong>以上的數據，而且<strong>用戶也不一定會點進去</strong>第十層啊，所以總括而言Lazy Load在這裡應該是一個比較好的practice吧！以下是修改成Async的版本，結果應該跟上面的例子是一樣的，這邊在<code>getDrilldownData()</code>的時候模擬了一個0.25秒的請求</p>
+<p></p><p data-height="270" data-theme-id="27846" data-slug-hash="VpzNyG" data-default-tab="js,result" data-user="auphone" data-embed-version="2" data-pen-title="Highcharts Async Drilldown" class="codepen">See the Pen <a href="http://codepen.io/auphone/pen/VpzNyG/" target="_blank" rel="external">Highcharts Async Drilldown</a> by auphone (<a href="http://codepen.io/auphone" target="_blank" rel="external">@auphone</a>) on <a href="http://codepen.io" target="_blank" rel="external">CodePen</a>.</p><p></p>
+<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
+
+<p>&nbsp;</p>
+<h2 id="複數Series"><a href="#複數Series" class="headerlink" title="複數Series"></a>複數Series</h2><p>這是一個我在工作上花了一點時間才能做出來的，上面的例子都可以很容易地在Google找到，但當有複數的Series又需要Async的時候就是另一回事了，這情​​況很多時候會在棒形圖或折線圖之類圖表出現，而且出現率很高，就如以下例子比較兩間商店的產品，正常做法的drilldown只能顯示其中一間商店的資料，不論你按的是棒形圖或是商店。但我希望按<code>水果</code>連結時應該顯示商店A和商店B的水果產品，而不是其中一間，所以為了達到這個目的修改的地方也滿多的，主要就是用<code>e.points</code>判斷是按了一間商店、或是全部，然後我們需要由<code>addSeriesAsDrilldown()</code>改成<code>addSingleSeriesAsDrilldown()</code>才可以在drilldown內加入複數series</p>
+<p></p><p data-height="270" data-theme-id="27846" data-slug-hash="RpZOJv" data-default-tab="js,result" data-user="auphone" data-embed-version="2" data-pen-title="Highcharts Async Column Drilldown" class="codepen">See the Pen <a href="http://codepen.io/auphone/pen/RpZOJv/" target="_blank" rel="external">Highcharts Async Column Drilldown</a> by auphone (<a href="http://codepen.io/auphone" target="_blank" rel="external">@auphone</a>) on <a href="http://codepen.io" target="_blank" rel="external">CodePen</a>.</p><p></p>
+<script async src="https://production-assets.codepen.io/assets/embed/ei.js"></script>
+
+<p>&nbsp;</p>
+<h2 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h2><p>以上其中一些部份有點像hacking，雖然有很多類似的請求，但官方好像沒太大意欲進行這部份的優化，所以暫時就只能這樣吧…</p>
+</p><p><p>No related post.</p></p></div></div><footer id="site-footer"><div class="container"><div class="row"><div class="col-lg-6 col-md-12 col-sm-12"><img src="/img/logo-inverse.png"/><p>人不應該渴望不勞而獲，正所謂辛苦過後吃的飯特別香，付出過後收獲自然也比別人豐盛。寫這個網誌是為了拯救一眾Rider，讓他們重新做人而不再被一時怠惰迷惑，也是為了時常警惕自己，要超越人類，成為不勞而獲也能夠吃到美味的飯的神！</p></div><div class="col-md-6"></div></div></div></footer><script src="/js/vendor.js"></script><script src="/js/script.js"></script><script src="http://127.0.0.1:35729/livereload.js?snipver=1"></script></body></html>
