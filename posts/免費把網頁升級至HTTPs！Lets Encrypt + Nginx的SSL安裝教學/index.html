@@ -1,0 +1,74 @@
+<html><head><title>免費把網頁升級至HTTPs！Let's Encrypt + Nginx的SSL安裝教學&nbsp;-&nbsp;Rider手記</title><meta charset="UTF8"/><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/><link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32"/><link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16"/><link rel="manifest" href="/manifest.json"/><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"/><meta name="theme-color" content="#ffffff"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.6.0/styles/github.min.css"/><script src="//cdn.bootcss.com/highlight.js/9.6.0/highlight.min.js"></script><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/><script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/css/tether.min.css"/><script src="https://code.jquery.com/jquery-3.2.0.min.js" integrity="sha256-JAW99MJVpJBGcbzEuXk4Az05s/XyDdBomFqNlM3ic+I=" crossorigin="anonymous"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.0/anime.min.js"></script><link rel="stylesheet" href="/css/style.css"></head><body><header id="mobile-site-header"><div class="container-fluid"><i class="topnav-toggle fa fa-bars fa-2x pull-left"></i><a class="brand" href="/"><img src="/img/logo-inverse.png"/></a></div></header><div class="site-wrap"><header id="site-header"><div class="container"><a class="brand" href="/"><img src="/img/logo.svg"/></a><div class="search"><div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><div class="gcse"><gcse:search></gcse:search></div></div></div></div></header><div class="container post"><h1 class="title">免費把網頁升級至HTTPs！Let's Encrypt + Nginx的SSL安裝教學</h1><p><p><a href="https://letsencrypt.org/" target="_blank" rel="external">Let’s Encrypt</a>已經推出一段時間了，它是一個多方認可的HTTP加密服務，而且還是<strong>免費</strong>的，這下我們不用再支付昂貴的年費了！</p>
+<h2 id="為麼要用SSL？"><a href="#為麼要用SSL？" class="headerlink" title="為麼要用SSL？"></a>為麼要用SSL？</h2><ul>
+<li>SSL幫助加密你的網頁傳輸，防止資料外流</li>
+<li>讓瀏覽器信任你的網頁</li>
+<li>付費系統等等必須使用SSL</li>
+<li>現在都<strong>免費</strong>了，還在考慮甚麼…</li>
+</ul>
+<h2 id="Let’s-Encrypt的限制"><a href="#Let’s-Encrypt的限制" class="headerlink" title="Let’s Encrypt的限制"></a>Let’s Encrypt的限制</h2><ul>
+<li>因為加密了所以速度比較慢，這是HTTPs的缺點</li>
+<li>90天要更新一次證書</li>
+</ul>
+<h2 id="一﹒安裝certbot"><a href="#一﹒安裝certbot" class="headerlink" title="一﹒安裝certbot"></a>一﹒安裝certbot</h2><p>這裡就介紹常用的Ubuntu + Nginx的安裝方法，其實就只是根據官方供的<a href="https://certbot.eff.org/" target="_blank" rel="external">certbot</a>的指示做，但還是簡單講一下吧 首先來安裝letsencrypt</p>
+<p></p><p class="code-caption" data-lang="bash" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="bash">sudo apt-get install letsencrypt
+</code></pre>
+<p>  然後就是生產證書，把以下的指令修改成你的<strong>網域</strong>和網頁的<strong>根目錄</strong>，假設你的網域是<code>example</code>，根目錄是<code>/var/www/example</code></p>
+<pre><code>letsencrypt certonly --webroot -w /var/www/example -d example.com -d www.example.com
+</code></pre><p>上面指令將會在<code>/etc/letsencrypt/live/example.com/</code>產生四個檔案</p>
+<ul>
+<li>cert.pem</li>
+<li>chain.pem</li>
+<li>fullchain.pem</li>
+<li>privkey.pem</li>
+</ul>
+<h2 id="二﹒設定Nginx"><a href="#二﹒設定Nginx" class="headerlink" title="二﹒設定Nginx"></a>二﹒設定Nginx</h2><p>我們把本來使用的<code>port 80</code>換成<code>port 443</code>，然後加入<code>fullchain.pem</code>和<code>privkey.pem</code>兩張證書，就像這樣</p>
+<pre><code>server {
+    listen *:443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;
+
+    root /var/www/example;
+
+    ...
+}
+</code></pre><p>然後我們可以選擇把所有http的請求自動轉到https</p>
+<pre><code>server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name example.com www.example.com;
+    return 301 https://$server_name$request_uri;
+}
+</code></pre><p>最後從新載入nginx的設定就大功告成了！</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>sudo systemctl reload nginx
+</code></pre><h2 id="自動更新證書"><a href="#自動更新證書" class="headerlink" title="自動更新證書"></a>自動更新證書</h2><p>由於Let’s Encrypt的限制，證書需要每90天更新一次，所以certbot很貼心地提供了一個更新的指令讓我們使用，而且也建議我們用<code>cron</code>或是<code>systemd</code>每天檢查兩次，我們不用擔心更新過多的問題，因為<strong>快到期之前</strong>即使運行了指令它也是<strong>不會更新</strong>的，所以我們可以每天的1AM和1PM各檢查更新一次，這樣就做到自動更新的效果了</p>
+<p>這裡我選擇用crontab</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>sudo crontab -e
+</code></pre><p>初次使用應該會出現以下畫面，個人習慣用nano，所以選2</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>no crontab for root - using an empty one
+
+Select an editor.  To change later, run &#39;select-editor&#39;.
+  1. /bin/ed
+  2. /bin/nano        &lt;---- easiest
+  3. /usr/bin/vim.basic
+  4. /usr/bin/vim.tiny
+
+Choose 1-4 [2]:
+</code></pre><p>選擇以後會跳到編輯版面，在最下面輸入以下語句</p>
+<pre><code>10 1,13 * * * /usr/bin/letsencrypt renew &gt;&gt; /var/log/le-renew.log
+15 1,13 * * * /etc/init.d/nginx reload
+</code></pre><p>最後按<code>Ctrl + X</code>儲存後系統便會依據時間自動執行了！</p>
+</p></div><div class="container recommend"><h2>本篇完！有興趣閱讀其他文章嗎？</h2><ul class="related-posts"><li class="related-posts-item"><a href="/posts/Nodejs簡易安裝教學/">Node.js簡易安裝教學</a></li><li class="related-posts-item"><a href="/posts/管理網頁緩存原來可以很簡單！/">管理網頁緩存原來可以很簡單！</a></li><li class="related-posts-item"><a href="/posts/Highcharts的一個Async Drilldown實例/">Highcharts的一個Async Drilldown實例</a></li><li class="related-posts-item"><a href="/posts/十分鐘試玩Elasticsearch，最快NoSQL db之一！/">十分鐘試玩Elasticsearch，最快NoSQL db之一！</a></li></div><div class="container"><div id="disqus_thread"></div></div><script>var disqus_config = function () {
+this.page.url = 'https://3rider.com/posts/免費把網頁升級至HTTPs！Lets Encrypt + Nginx的SSL安裝教學/';
+};
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://3rider-1.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();</script></div><footer id="site-footer"><div class="container">© Copyright 3rider.com. All rights reserved.</div></footer><script src="/js/vendor.js"></script><script src="/bower_components/typeahead.js/dist/typeahead.bundle.min.js"></script><script src="/bower_components/classie/classie.js"></script><script src="/js/script.js"></script><script src="/js/cse.js"></script><script id="dsq-count-scr" src="//3rider-1.disqus.com/count.js" async="async"></script></body></html>

@@ -1,0 +1,37 @@
+<html><head><title>看完Google提供的便宜方案，我決定從AWS轉到GCP了！&nbsp;-&nbsp;Rider手記</title><meta charset="UTF8"/><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/><link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32"/><link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16"/><link rel="manifest" href="/manifest.json"/><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"/><meta name="theme-color" content="#ffffff"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.6.0/styles/github.min.css"/><script src="//cdn.bootcss.com/highlight.js/9.6.0/highlight.min.js"></script><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/><script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/css/tether.min.css"/><script src="https://code.jquery.com/jquery-3.2.0.min.js" integrity="sha256-JAW99MJVpJBGcbzEuXk4Az05s/XyDdBomFqNlM3ic+I=" crossorigin="anonymous"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.0/anime.min.js"></script><link rel="stylesheet" href="/css/style.css"></head><body><header id="mobile-site-header"><div class="container-fluid"><i class="topnav-toggle fa fa-bars fa-2x pull-left"></i><a class="brand" href="/"><img src="/img/logo-inverse.png"/></a></div></header><div class="site-wrap"><header id="site-header"><div class="container"><a class="brand" href="/"><img src="/img/logo.svg"/></a><div class="search"><div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><div class="gcse"><gcse:search></gcse:search></div></div></div></div></header><div class="container post"><h1 class="title">看完Google提供的便宜方案，我決定從AWS轉到GCP了！</h1><p><p>第一次聽到<a href="https://cloud.google.com/" target="_blank" rel="external">GCP（Google Cloud Platform）</a>大概是2016年初左右吧，因為機緣巧合在研究Big Data的時候看到它的Big Query，而且還能夠試用，我當然不會放過啊，當時忘記了是30天還是60天試用，提供的額度跟現在一樣是$300美金，試了一段時間發現它有些缺點不能達到我的項目要求，所以就沒有再用了。那時候對它的印象就是介面很好看，然後它的<a href="https://cloud.google.com/compute/" target="_blank" rel="external">Computer Engine</a>（Google的虛擬機器）很快，自帶的網頁版SSH很好用，總之印象還是很好的，但可能是一直在用AWS，Big Query又不太用得到，而且當時個人方面也沒實際需要用到一個VM，所以也不太上心。</p>
+<h2 id="轉成GCP的契機"><a href="#轉成GCP的契機" class="headerlink" title="轉成GCP的契機"></a>轉成GCP的契機</h2><p>寫這個網誌一開始的時候也是用AWS的，直至幾天前在Hacker News看到這篇<a href="https://news.ycombinator.com/item?id=13755673" target="_blank" rel="external">Ask HN: Is S3 down?</a>，當然文章的內容不是重點，看完第一個回覆真的讓我一頭霧水，原本是在問AWS的問題，卻來了一堆回覆討論GCP，然後剛好我很閒（在上班）看看他們討論些甚麼，發現很多關於價錢的比較，看到之後我二話不說立刻到GCP查價目表，一看之下真的嚇了我一大跳，規格差不多的VM價錢比AWS<strong>便宜了一倍</strong>，這裡不是說AWS貴，但是<strong>GCP真的很划算</strong>，尤其是我這些只用網頁寄存的用戶，經過一番研究（在上班）後，最後我決定在GCP設定一台VM，然後為這網誌搬家了。但話雖如此，其實AWS跟GCP各有好處，只是我選擇了GCP作個人用途，而工作上我還是在用AWS的！<del datetime="2017-03-06T12:25:01+00:00">因為買了RI（Reserved Instance）…</del></p>
+<h2 id="免費方案比較"><a href="#免費方案比較" class="headerlink" title="免費方案比較"></a>免費方案比較</h2><p><strong>Google Cloud Platform</strong></p>
+<ul>
+<li>需要登記信用卡</li>
+<li>體驗60天</li>
+<li>$300美金限額</li>
+<li>比較寬鬆的服務限制，直至花光限額或過了60天</li>
+</ul>
+<p><strong>AWS</strong></p>
+<ul>
+<li>需要登記信用卡</li>
+<li>體驗一年</li>
+<li>沒有限額</li>
+<li>只能用<a href="https://aws.amazon.com/tw/free/" target="_blank" rel="external">免費方案包含</a>的服務</li>
+</ul>
+<h2 id="價錢比較"><a href="#價錢比較" class="headerlink" title="價錢比較"></a>價錢比較</h2><p>以下我只列出最基本的On-Demand收費，就這樣已經看出差別了，就以普遍的單核3.75GB記憶體作比較，GCP每小時$0.055，AWS則要$0.098，差不多相差了<strong>一倍</strong>！<br>&nbsp;<br><strong>Google Cloud Platform</strong><br><img src="/posts/看完Google提供的便宜方案，我決定從AWS轉到GCP了！/gpc-pricing.png" alt="gpc-pricing.png" title=""> </p>
+<p><strong>AWS</strong><br><img src="/posts/看完Google提供的便宜方案，我決定從AWS轉到GCP了！/aws-pricing.png" alt="aws-pricing.png" title=""></p>
+<h2 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h2><p>因為它們提供的服務太多，這裡不逐一比較了，反正兩邊都能免費試用，看自己的需要選擇吧</p>
+<ul>
+<li>AWS<strong>每張信用卡</strong>有<strong>一年免費</strong>，所以可以免費讓你用很久</li>
+<li>GPC的限額制可以讓你免費<strong>測試較高效能</strong>的服務，AWS只能用比較基本的服務</li>
+<li>兩邊的監測系統差不多，個人覺得GCP介面的比較人性化</li>
+<li>兩邊都自帶網頁版SSH，但是AWS需要用Java，而且用起來比較慢</li>
+<li>AWS提供<strong>較多地區選擇</strong>，特別是海外，但是<strong>GCP有台灣</strong>而AWS最近的只有日本</li>
+<li>如果不預付暫時來看是<strong>GCP比較便宜</strong></li>
+<li>某M公司就不說了，介面不好用、性能慢、收費貴、下刪一千字…</li>
+</ul>
+</p></div><div class="container recommend"><h2>本篇完！有興趣閱讀其他文章嗎？</h2><ul class="related-posts"><li class="related-posts-item"><a href="/posts/談CoffeeScript的未來，是否被ES6趕盡殺絕？/">談CoffeeScript的未來，是否被ES6趕盡殺絕？</a></li><li class="related-posts-item"><a href="/posts/棄坑從SPA回到Wordpress，最大的敵人是SEO？/">棄坑從SPA回到Wordpress，最大的敵人是SEO？</a></li><li class="related-posts-item"><a href="/posts/Wordpress備份自己做，從Google VM直接備份至Cloud Storage！/">Wordpress備份自己做，從Google VM直接備份至Cloud Storage！</a></li><li class="related-posts-item"><a href="/posts/Gitlyio．一個以性能優先、新推出的免費Git服務/">Gitly.io．一個以性能優先、新推出的免費Git服務</a></li></div><div class="container"><div id="disqus_thread"></div></div><script>var disqus_config = function () {
+this.page.url = 'https://3rider.com/posts/看完Google提供的便宜方案，我決定從AWS轉到GCP了！/';
+};
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://3rider-1.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();</script></div><footer id="site-footer"><div class="container">© Copyright 3rider.com. All rights reserved.</div></footer><script src="/js/vendor.js"></script><script src="/bower_components/typeahead.js/dist/typeahead.bundle.min.js"></script><script src="/bower_components/classie/classie.js"></script><script src="/js/script.js"></script><script src="/js/cse.js"></script><script id="dsq-count-scr" src="//3rider-1.disqus.com/count.js" async="async"></script></body></html>

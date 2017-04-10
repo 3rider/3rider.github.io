@@ -1,0 +1,140 @@
+<html><head><title>十分鐘試玩Elasticsearch，最快NoSQL db之一！&nbsp;-&nbsp;Rider手記</title><meta charset="UTF8"/><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/><link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32"/><link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16"/><link rel="manifest" href="/manifest.json"/><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"/><meta name="theme-color" content="#ffffff"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.6.0/styles/github.min.css"/><script src="//cdn.bootcss.com/highlight.js/9.6.0/highlight.min.js"></script><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/><script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/css/tether.min.css"/><script src="https://code.jquery.com/jquery-3.2.0.min.js" integrity="sha256-JAW99MJVpJBGcbzEuXk4Az05s/XyDdBomFqNlM3ic+I=" crossorigin="anonymous"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.0/anime.min.js"></script><link rel="stylesheet" href="/css/style.css"></head><body><header id="mobile-site-header"><div class="container-fluid"><i class="topnav-toggle fa fa-bars fa-2x pull-left"></i><a class="brand" href="/"><img src="/img/logo-inverse.png"/></a></div></header><div class="site-wrap"><header id="site-header"><div class="container"><a class="brand" href="/"><img src="/img/logo.svg"/></a><div class="search"><div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><div class="gcse"><gcse:search></gcse:search></div></div></div></div></header><div class="container post"><h1 class="title">十分鐘試玩Elasticsearch，最快NoSQL db之一！</h1><p><p>因為工作的關係很多時候會接觸到<strong>資料分析</strong>的部份，所以需要一個靈活而快速的資料庫協助，而Elasticsearch （ES）是暫時測試過最快的NoSQL之一，雖然它不適合作主數據庫（讀寫會有誤差），但作為索引引擎它可說是一流的！  </p>
+<h2 id="一﹒安裝Elasticsearch"><a href="#一﹒安裝Elasticsearch" class="headerlink" title="一﹒安裝Elasticsearch"></a>一﹒安裝Elasticsearch</h2><p>因為這次純屬試玩，所以也不做多餘的設定了，直接用官方提供的免安裝zip體驗一下，首先到<a href="https://www.elastic.co/downloads/elasticsearch" target="_blank" rel="external">官方下載</a>目前最新的5.2版本壓縮檔，下載好了以後解壓，然後用它提供的binary啟動</p>
+<p></p><p class="code-caption" data-lang="bash" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="bash">cd elasticsearch-5.2.0
+./bin/elasticsearch
+</code></pre>
+<p>啟動後可以在<a href="http://localhost:9200" target="_blank" rel="external">http://localhost:9200</a>查看資料庫的狀態</p>
+<p></p><p class="code-caption" data-lang="json" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="json">{
+  &quot;name&quot; : &quot;ddBd3a_&quot;,
+  &quot;cluster_name&quot; : &quot;elasticsearch&quot;,
+  &quot;cluster_uuid&quot; : &quot;megP9_F-S06WuK6hJAVrdw&quot;,
+  &quot;version&quot; : {
+    &quot;number&quot; : &quot;5.2.0&quot;,
+    &quot;build_hash&quot; : &quot;24e05b9&quot;,
+    &quot;build_date&quot; : &quot;2017-01-24T19:52:35.800Z&quot;,
+    &quot;build_snapshot&quot; : false,
+    &quot;lucene_version&quot; : &quot;6.4.0&quot;
+  },
+  &quot;tagline&quot; : &quot;You Know, for Search&quot;
+}
+</code></pre>
+<h2 id="二﹒安裝Sense插件"><a href="#二﹒安裝Sense插件" class="headerlink" title="二﹒安裝Sense插件"></a>二﹒安裝Sense插件</h2><p>需然ES可以用HTTP請求執行指令，例如<code>CURL</code>，但還是有介面比較方便，所以我們可以安裝Chrome的<a href="https://chrome.google.com/webstore/detail/sense-beta/lhjgkmllcaadmopgmanpapmpjgmfcfig" target="_blank" rel="external">Sense</a>插件執行指令<br><img src="/posts/十分鐘試玩Elasticsearch，最快NoSQL%20db之一！/es-query.png" alt="es-query.png" title=""></p>
+<h2 id="三﹒了解更多Elasticsearch"><a href="#三﹒了解更多Elasticsearch" class="headerlink" title="三﹒了解更多Elasticsearch"></a>三﹒了解更多Elasticsearch</h2><p>NoSQL就是非關係數據庫，很多時候都比較靈活，例如不需要建立table、也不需要再畫麻煩的ERD了！但當然也可以設定一些架構（Schema）限制資料輸入，但這篇就不說明這些了，想了解更多可以到<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping.html" target="_blank" rel="external">這裡</a>學習學習，另外關於它<code>index</code>和<code>type</code>的概念可以到<a href="https://www.elastic.co/blog/index-vs-type" target="_blank" rel="external">官方blog</a>了解</p>
+<h2 id="四﹒核心指令"><a href="#四﹒核心指令" class="headerlink" title="四﹒核心指令"></a>四﹒核心指令</h2><p>核心指令分為４種，就是常見的CRUD</p>
+<ul>
+<li>GET：查詢</li>
+<li>POST：寫入</li>
+<li>PUT：更新或寫入（<code>upsert</code>功能，當沒有可更新的條件便寫入）</li>
+<li>DELETE：刪除</li>
+</ul>
+<p>而它用的是RESTful風格的請求，以下是一些例子，當中有使用到<code>search</code>的地方就如SQL的<code>where</code>一樣，更多用法可以參考<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-index_.html" target="_blank" rel="external">官方的教學</a></p>
+<p></p><p class="code-caption" data-lang="json" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="json">PUT twitter/tweet/1
+{
+    &quot;user&quot; : &quot;peter&quot;,
+    &quot;post_date&quot; : &quot;2009-11-15T14:12:12&quot;,
+    &quot;message&quot; : &quot;trying out Elasticsearch update&quot;
+}
+
+POST twitter/tweet
+{
+    &quot;user&quot; : &quot;john&quot;,
+    &quot;post_date&quot; : &quot;2009-11-15T14:12:12&quot;,
+    &quot;message&quot; : &quot;trying out Elasticsearch&quot;
+}
+
+GET twitter/tweet/1
+
+GET twitter/tweet/_search
+
+DELETE twitter/tweet/1
+</code></pre>
+<h2 id="五﹒基本Searching"><a href="#五﹒基本Searching" class="headerlink" title="五﹒基本Searching"></a>五﹒基本Searching</h2><p>以下的例子我們建立了２個<code>user</code>，分別是<code>peter</code>和<code>john</code>，然後用了３種搜尋方法</p>
+<ul>
+<li>Exists：如果搜尋的<code>field</code>存在</li>
+<li>Term：搜尋的值等同於數據記錄的值</li>
+<li>Range：數據記錄的值在兩個搜尋值之間</li>
+</ul>
+<p>&nbsp;<br>除此之外還有很多用法，可以到<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search.html" target="_blank" rel="external">這裡</a>查看詳細資料，以下例子先建立了兩個<code>user</code>，然後再用上面提到的３種方法搜尋</p>
+<p></p><p class="code-caption" data-lang="json" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code class="json">PUT twitter/tweet/1
+{
+    &quot;user&quot; : &quot;peter&quot;,
+    &quot;age&quot;: 10
+}
+
+PUT twitter/tweet/2
+{
+    &quot;user&quot; : &quot;john&quot;,
+    &quot;age&quot;: 20,
+    &quot;gender&quot;: &quot;Male&quot;
+}
+
+GET twitter/tweet/_search
+{
+    &quot;query&quot;: {
+        &quot;exists&quot;: {
+            &quot;field&quot;: &quot;gender&quot;
+        }
+    }
+}
+
+GET twitter/tweet/_search
+{
+    &quot;query&quot;: {
+        &quot;term&quot;: {
+           &quot;user&quot;: {
+              &quot;value&quot;: &quot;peter&quot;
+           }
+        }
+    }
+}
+
+GET twitter/tweet/_search
+{
+    &quot;query&quot;: {
+        &quot;range&quot;: {
+           &quot;age&quot;: {
+              &quot;from&quot;: 19,
+              &quot;to&quot;: 30
+           }
+        }
+    }
+}
+</code></pre>
+<h2 id="六﹒Aggregation"><a href="#六﹒Aggregation" class="headerlink" title="六﹒Aggregation"></a>六﹒Aggregation</h2><p>ES在<code>Aggregation</code>方面最特出，因為它在速度上比其他資料庫快很多，而這功能主要就是幫我們做計算，搜尋並合併（Map-Reduce），縮減成一些有意義的數據，所以對於分析方面是非常有利的，我們就以上例子試用<code>Aggregation</code>計算<code>總年齡</code>和<code>平均年齡</code></p>
+<pre><code>GET twitter/tweet/_search
+{
+    &quot;size&quot;: 0, 
+    &quot;aggs&quot;: {
+        &quot;sumAge&quot;: {
+            &quot;sum&quot;: {
+                &quot;field&quot;: &quot;age&quot;   
+            }
+        }
+    }
+}
+
+GET twitter/tweet/_search
+{
+    &quot;size&quot;: 0, 
+    &quot;aggs&quot;: {
+        &quot;avgAge&quot;: {
+            &quot;sum&quot;: {
+                &quot;field&quot;: &quot;age&quot;   
+            }
+        }
+    }
+}
+</code></pre><h2 id="七﹒後記"><a href="#七﹒後記" class="headerlink" title="七﹒後記"></a>七﹒後記</h2><p>Elasticsearch還有很多好玩的功能待大家發掘，以後有機會再補上一些進階的用法讓各位參考！</p>
+</p></div><div class="container recommend"><h2>本篇完！有興趣閱讀其他文章嗎？</h2><ul class="related-posts"><li class="related-posts-item"><a href="/posts/Nodejs簡易安裝教學/">Node.js簡易安裝教學</a></li><li class="related-posts-item"><a href="/posts/管理網頁緩存原來可以很簡單！/">管理網頁緩存原來可以很簡單！</a></li><li class="related-posts-item"><a href="/posts/輕鬆學習RESTful API，人見人愛的簡約設計！/">輕鬆學習RESTful API，人見人愛的簡約設計！</a></li><li class="related-posts-item"><a href="/posts/免費把網頁升級至HTTPs！Lets Encrypt + Nginx的SSL安裝教學/">免費把網頁升級至HTTPs！Let's Encrypt + Nginx的SSL安裝教學</a></li></div><div class="container"><div id="disqus_thread"></div></div><script>var disqus_config = function () {
+this.page.url = 'https://3rider.com/posts/十分鐘試玩Elasticsearch，最快NoSQL db之一！/';
+};
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://3rider-1.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();</script></div><footer id="site-footer"><div class="container">© Copyright 3rider.com. All rights reserved.</div></footer><script src="/js/vendor.js"></script><script src="/bower_components/typeahead.js/dist/typeahead.bundle.min.js"></script><script src="/bower_components/classie/classie.js"></script><script src="/js/script.js"></script><script src="/js/cse.js"></script><script id="dsq-count-scr" src="//3rider-1.disqus.com/count.js" async="async"></script></body></html>
