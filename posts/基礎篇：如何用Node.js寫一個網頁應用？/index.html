@@ -1,0 +1,94 @@
+<html><head><title>基礎篇：如何用Node.js寫一個網頁應用？&nbsp;-&nbsp;Rider手記</title><meta charset="UTF8"/><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/><link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32"/><link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16"/><link rel="manifest" href="/manifest.json"/><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"/><meta name="theme-color" content="#ffffff"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.6.0/styles/github.min.css"/><script src="//cdn.bootcss.com/highlight.js/9.6.0/highlight.min.js"></script><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/><script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/css/tether.min.css"/><script src="https://code.jquery.com/jquery-3.2.0.min.js" integrity="sha256-JAW99MJVpJBGcbzEuXk4Az05s/XyDdBomFqNlM3ic+I=" crossorigin="anonymous"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.0/anime.min.js"></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-92978795-1', 'auto');
+ga('send', 'pageview');
+</script><link rel="stylesheet" href="/css/style.css"></head><body><header id="mobile-site-header"><div class="container-fluid"><i class="topnav-toggle fa fa-bars fa-2x pull-left"></i><a class="brand" href="/"><img src="/img/logo-inverse.png"/></a></div></header><div class="site-wrap"><header id="site-header"><div class="container"><a class="brand" href="/"><img src="/img/logo.svg"/></a><div class="search"><div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><div class="gcse"><gcse:search></gcse:search></div></div></div></div></header><div class="container post"><h1 class="title">基礎篇：如何用Node.js寫一個網頁應用？</h1><p><p>旅程開始我們要知道一些基本的知識，這裡當然就要知道你在寫的語言是甚麼吧！<br><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/boring.gif" alt="boring.gif" title=""><br>OK！我知道這很沉悶，有誰會想聽這些呢？但我想你至少搞清楚它們的分別，因為很多同學都傻傻的<strong>分不清楚伺服器端和客戶端</strong>，用Node.js的時候就更容易搞混了，因為兩邊都是用JS麻！首先我們看看維基百科的定義：</p>
+<blockquote>
+<p>Node.js是一個能夠在伺服器端運行JavaScript的開放原始碼、跨平台JavaScript執行環境。</p>
+</blockquote>
+<h2 id="Node-js與JavaScript"><a href="#Node-js與JavaScript" class="headerlink" title="Node.js與JavaScript"></a>Node.js與JavaScript</h2><p>簡而言之<strong>Node.js就是伺服器</strong>；而<strong>JavaScript是一種語言</strong>，是一種少數能夠讓瀏覽器閱讀的語言，所以我們客戶端可以用JavaScript編寫。</p>
+<p>然而在出現Node.js以前我們後端只能用PHP啊、JAVA啊甚麼的編寫，這代表開發一個網頁需要<strong>學習最少兩種語言</strong>，然後天才Ryan Dahl就想到既然我們一定要學習JavaScript，為甚麼後端不能用JavaScript寫呢？所以Node.js就這樣誕生了，Alhamdulilah！</p>
+<h2 id="客戶端、伺服器端？"><a href="#客戶端、伺服器端？" class="headerlink" title="客戶端、伺服器端？"></a>客戶端、伺服器端？</h2><p>所以說，客戶端就是別人看到的網頁，瀏覽器讀得懂的，就是客戶端；伺服器端故名思義就是伺服器，想要別人瀏覽你的網頁，你需要一個伺服器寄存你的檔案，包括html、JavaScript、CSS、圖片、影片…然而伺服器當然不止這些功能，它還會連接資料庫、處理請求、控制伺服器本機資訊等等，總之除了讓客戶看到的部份，其他基本上都是伺服器端。</p>
+<h2 id="教練！我好想寫網頁…"><a href="#教練！我好想寫網頁…" class="headerlink" title="教練！我好想寫網頁…"></a>教練！我好想寫網頁…</h2><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/slam-dunk-1.jpg" alt="slam-dunk-1.jpg" title="">
+<p>OK！我們這就開始練習寫第一個網頁！</p>
+<h6 id="1-建立項目資料夾"><a href="#1-建立項目資料夾" class="headerlink" title="1. 建立項目資料夾"></a>1. 建立項目資料夾</h6><p>首先我們要選擇一個項目的目錄，我個人喜歡放在<code>~/projects</code>的位置，假設這個項目叫<code>my-website</code></p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>mkdir -p ~/projects/my-website
+cd ~/projects/my-website
+</code></pre><h6 id="2-初始化NPM"><a href="#2-初始化NPM" class="headerlink" title="2. 初始化NPM"></a>2. 初始化NPM</h6><p>每次建立一個node.js項目都要初始化NPM(Node Package Manager)，詳情以後再說吧！執行下面指令後需要填寫項目的資料，我們先全部按<code>Enter</code>快速建立一個項目</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>npm init
+</code></pre><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/npm-init.png" alt="npm-init.png" title="">
+<p>這個指令將會產生<code>package.json</code>，這個檔案的作用是儲存這個項目的資訊，包括以後安裝的模組和版本</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>{
+  &quot;name&quot;: &quot;my-website&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;description&quot;: &quot;&quot;,
+  &quot;main&quot;: &quot;index.js&quot;,
+  &quot;scripts&quot;: {
+    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;
+  },
+  &quot;author&quot;: &quot;&quot;,
+  &quot;license&quot;: &quot;ISC&quot;
+}
+</code></pre><h6 id="3-建立靜態網頁"><a href="#3-建立靜態網頁" class="headerlink" title="3. 建立靜態網頁"></a>3. 建立靜態網頁</h6><p>最基本的靜態頁面就是<code>index.html</code>，所以我們建立一個放靜態文件的資料夾<code>static</code>，然後把<code>index.html</code>放到裡面</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>mkdir static
+touch static/index.html
+</code></pre><h6 id="4-設定atom"><a href="#4-設定atom" class="headerlink" title="4. 設定atom"></a>4. 設定atom</h6><p>這裡我們先暫停一下，先設定好你的編輯器，開啟atom，把<code>my-website</code>資料夾拖拉到視窗裡面，大概會變成這樣<br><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/atom-1.png" alt="atom-1.png" title=""></p>
+<p>在atom我們可以安裝各式各樣的插件，安裝方法是按下<code>ctrl + shift + p</code>，再輸入<code>install package</code><br><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/atom-2.png" alt="atom-2.png" title=""></p>
+<p>來到安裝插件的頁面，搜尋<code>emmet</code>並安裝，這個插件輔助我們自動完成一些常用的語句<br><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/atom-3.png" alt="atom-3.png" title=""></p>
+<h6 id="5-嗨！世界！"><a href="#5-嗨！世界！" class="headerlink" title="5. 嗨！世界！"></a>5. 嗨！世界！</h6><p>安裝好後我們回到<code>static/index.html</code>，輸入<code>html</code>，再按<code>Enter</code>就會自動生成html tags了！<br><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/atom-4.png" alt="atom-4.png" title=""><br><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/atom-5.png" alt="atom-5.png" title=""><br><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/magic.png" alt="magic.png" title=""></p>
+<p>最後在<code>&lt;body&gt;</code>內加入<code>嗨！世界！</code>的tag，這將會顯示在網頁上</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;title&gt;&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;嗨！世界！&lt;/h1&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><h2 id="建立伺服器"><a href="#建立伺服器" class="headerlink" title="建立伺服器"></a>建立伺服器</h2><p>來到這裡，我們還未能夠讓網頁在瀏覽器顯示出來…但已經不遠了！還記得讓我們的檔案需要一個地方寄存嗎？沒錯就是伺服器，我們又稱這類伺服器為web hosting、網存，接下來我們就來設定伺服器。<br><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/slam-dunk-2.jpg" alt="slam-dunk-2.jpg" title=""></p>
+<h6 id="6-安裝Express框架"><a href="#6-安裝Express框架" class="headerlink" title="6. 安裝Express框架"></a>6. 安裝Express框架</h6><p><a href="http://expressjs.com/" target="_blank" rel="external">Express</a>這個web框架在同行應該是無人不曉的了，不懂express不要跟其他人說你寫Node啊，它其中一個最重要的功能就是API，而且它簡化了很多設定，包括協助我們建立伺服器，express幾乎是Node.js網頁開發必備的模組了，我們用以下指令安裝</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>npm install express --save
+</code></pre><p>在這裡注意一下我們安裝別人的模組全部由npm管理，一句指令就能安裝，非常方便！要緊記在JS世界內很多功能都已經有人寫好了，<strong>不要每樣功能都自己重頭開始寫</strong>，想學習就多閱讀別人的原碼，我敢說JS開發者是最不吝嗇分享自己原碼的人了；另外<code>--save</code>的作用會把模組紀錄在<code>package.json</code>，否則只會安裝在項目的<code>node_modules</code>內而不會有任何紀錄，用途以後再說。</p>
+<h6 id="7-編寫伺服器"><a href="#7-編寫伺服器" class="headerlink" title="7. 編寫伺服器"></a>7. 編寫伺服器</h6><p>終於來到最後一步了，我們先建立存放伺服器原碼的檔案<code>server.js</code></p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>touch server.js
+</code></pre><p>這是<code>server.js</code>的原碼</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>// 使用express模組的function
+let express = require(&#39;express&#39;),
+    app = express();
+
+// 開放./static資料夾
+app.use(express.static(&#39;./static&#39;));
+
+// 啟動伺服器，連接埠是慣用的3000
+let server = app.listen(3000, () =&gt; {
+  let { address, port } = server.address();
+  console.log(`伺服器已建立${address}:${port}`);
+});
+</code></pre><p>這裡要注意一下當我們讀取模組的時候會使用<code>require(&#39;模組&#39;)</code>，而當中的值是基於作者而定的，最好的得知方法就是<strong>閱讀document</strong>，Node.js的文件的簡讀程度跟其他語言比較是首屈一指的，所以<strong>養成讀文件的習慣</strong>吧！而模組的檔案是放在<code>node_modules</code>內的，這資料夾內的檔案是不預計我們去修改的，所以<strong>請不要碰</strong>，當然我們可以自行寫模組，以後會再說。</p>
+<h2 id="運行伺服器"><a href="#運行伺服器" class="headerlink" title="運行伺服器"></a>運行伺服器</h2><p>這真的是最後了！執行以下指令便可以運行伺服器了！</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>node server
+</code></pre><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/run-node.png" alt="run-node.png" title="">
+<p>接著到<a href="http://localhost:3000" target="_blank" rel="external">http://localhost:3000</a>瀏覽我們<del>美麗</del>的網頁吧！<br><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/hello-world.png" alt="hello-world.png" title=""></p>
+</p></div><div class="container recommend"><h2>本篇完！有興趣閱讀其他文章嗎？</h2><ul class="related-posts"><li class="related-posts-item"><a href="/posts/起始篇：如何用Node.js寫一個網頁應用？/">起始篇：如何用Node.js寫一個網頁應用？</a></li><li class="related-posts-item"><a href="/posts/CSS框架篇：如何用Node.js寫一個網頁應用？/">CSS框架篇：如何用Node.js寫一個網頁應用？</a></li></div><div class="container"><div id="disqus_thread"></div></div><script>var disqus_config = function () {
+this.page.url = 'https://3rider.com/posts/基礎篇：如何用Node.js寫一個網頁應用？/';
+};
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://3rider-1.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();</script></div><footer id="site-footer"><div class="container">© Copyright 3rider.com. All rights reserved.</div></footer><script src="/js/vendor.js"></script><script src="/bower_components/typeahead.js/dist/typeahead.bundle.min.js"></script><script src="/bower_components/classie/classie.js"></script><script src="/js/script.js"></script><script src="/js/cse.js"></script><script id="dsq-count-scr" src="//3rider-1.disqus.com/count.js" async="async"></script><script src="http://127.0.0.1:35729/livereload.js?snipver=1"></script></body></html>

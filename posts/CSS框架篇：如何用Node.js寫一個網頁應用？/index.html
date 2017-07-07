@@ -1,0 +1,158 @@
+<html><head><title>CSS框架篇：如何用Node.js寫一個網頁應用？&nbsp;-&nbsp;Rider手記</title><meta charset="UTF8"/><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/><link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32"/><link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16"/><link rel="manifest" href="/manifest.json"/><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"/><meta name="theme-color" content="#ffffff"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.6.0/styles/github.min.css"/><script src="//cdn.bootcss.com/highlight.js/9.6.0/highlight.min.js"></script><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"/><script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/css/tether.min.css"/><script src="https://code.jquery.com/jquery-3.2.0.min.js" integrity="sha256-JAW99MJVpJBGcbzEuXk4Az05s/XyDdBomFqNlM3ic+I=" crossorigin="anonymous"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.0/anime.min.js"></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-92978795-1', 'auto');
+ga('send', 'pageview');
+</script><link rel="stylesheet" href="/css/style.css"></head><body><header id="mobile-site-header"><div class="container-fluid"><i class="topnav-toggle fa fa-bars fa-2x pull-left"></i><a class="brand" href="/"><img src="/img/logo-inverse.png"/></a></div></header><div class="site-wrap"><header id="site-header"><div class="container"><a class="brand" href="/"><img src="/img/logo.svg"/></a><div class="search"><div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><div class="gcse"><gcse:search></gcse:search></div></div></div></div></header><div class="container post"><h1 class="title">CSS框架篇：如何用Node.js寫一個網頁應用？</h1><p><p>相信介面（UI）設計是很多網頁開發者的弱點，更不用說用戶體驗了（UX）！在這個移動設備發達的年代大家都在說mobile-first，可想而之對於一個連CSS也只是略懂皮毛的新手到底是多大的難關，幸好！正因為這樣，出現了很多CSS框架（framework），讓我們不用幾乎不用碰CSS也能夠拼出一個不錯的介面</p>
+<h2 id="Bootstrap框架"><a href="#Bootstrap框架" class="headerlink" title="Bootstrap框架"></a>Bootstrap框架</h2><img src="/posts/CSS框架篇：如何用Node.js寫一個網頁應用？/bootstrap.jpg" alt="bootstrap.jpg" title="">
+<p>Bootstrap算是框架界的老字號了，網頁開發者很介意框架的容量，臃腫的框架會影響用戶體驗，但太輕量的框架幫助又不大，Bootstrap在這方面比較平衡，所以很多開發者選擇使用它。當然這也有好壞處，好處就是社群支援比較多，有很多snippet甚至template讓你免費使用，能幫你快速完成一個網頁，而壞處就是用框架可能會導至跟別人的網站很相似，失去個人風格。不過這也不是這篇教學的重點，而且對新手來說能跟別人的網頁看起來差不多好像也不壞吧？</p>
+<h2 id="自行託管vs雲端"><a href="#自行託管vs雲端" class="headerlink" title="自行託管vs雲端"></a>自行託管vs雲端</h2><p>使用一個客戶端模組普遍有兩種方法，第一種是self-hosted（自行託管），另一種是cloud hosted（雲端託管）。前者很容易理解，就是模組架下載到主機再使用；而後者通常會搭配<a href="https://en.wikipedia.org/wiki/Content_delivery_network" target="_blank" rel="external">CDN（Content delivery network）</a>技術，通過這技術會自動選擇最接近客戶端的緩存伺器服，讓客戶端能更快讀取檔案。</p>
+<h6 id="選擇哪一個？"><a href="#選擇哪一個？" class="headerlink" title="選擇哪一個？"></a>選擇哪一個？</h6><p>這個很視乎檔案的類型和用戶對象，用CDN可以減少網站的負擔，假如你的網站是全球性的，還可以提升平均讀取速度，增加可用性（availability），但依賴別人的服務需要考慮它的可靠性（Reliability），也要評估服務商的可信性。而自託雖然會吃伺服器的流量，但相對比較可靠，至少能連上網站道理上就能夠連上模組的檔案，所以在開發階段建議還是使用自託形式，免去不必要的等待時間，時間是很保貴的！</p>
+<h2 id="安裝Bower"><a href="#安裝Bower" class="headerlink" title="安裝Bower"></a>安裝Bower</h2><img src="/posts/CSS框架篇：如何用Node.js寫一個網頁應用？/bower.png" alt="bower.png" title="">
+<p>上一篇就提到npm這強大的模組管理系統，而另一個就叫bower，bower這東西其實快要被npm取代了，但它還有自己的好處，bower的原意是管理客戶端的模組，而npm則是Node的比較多，所以npm有時候會依賴Node的模組，如果不進行特別處理便無法在網頁上運行，而bower不會出現這樣的情況，那麼我們就一切從簡，用bower！</p>
+<h6 id="bower安裝指令"><a href="#bower安裝指令" class="headerlink" title="bower安裝指令"></a>bower安裝指令</h6><p>我們用以下指令安裝bower，<code>-g</code>是global的意思，安裝好了以後我們就可以直接在terminal使用這指令</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>npm install bower -g
+</code></pre><h2 id="下載Starter-project"><a href="#下載Starter-project" class="headerlink" title="下載Starter project"></a>下載Starter project</h2><p>這個starter project跟上一篇的原碼是一樣的，我們可以用git clone或是在<a href="https://github.com/3rider/node-tutorial-bootstrap-starter" target="_blank" rel="external">這裡下載</a>並解壓到<code>~/projects</code></p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>cd ~/projects
+git clone https://github.com/3rider/node-tutorial-bootstrap-starter.git
+</code></pre><h6 id="了解npm模組"><a href="#了解npm模組" class="headerlink" title="了解npm模組"></a>了解npm模組</h6><p>如果你還記得上一篇我做提到<code>npm install --save</code>，這裡就用到這儲存模組資訊的好處，首先我們來看看目前的結構</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>node-tutorial-bootstrap-starter/
+├── static/
+│   └── index.html
+├── package.json
+└── server.json
+</code></pre><p>你會發現這裡還沒有<code>node_modules</code>，為甚麼呢？我們在做團隊開發的時候經常要同步原碼，在同步的過程我們應該盡量減少需要同步的檔案，而這些固定不會被修改的模組檔案就是其中之一，所以我也沒有把這些檔案放到git。而關鍵就是package.json內儲存了的資訊，當中<code>dependencies</code>就表示這個項目依賴以下模組，而這次我們依賴express 4.15.3以上的版本</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>{
+  ...
+  &quot;dependencies&quot;: {
+    &quot;express&quot;: &quot;^4.15.3&quot;
+  }
+}
+</code></pre><p>接下來就方便了，我們只需要執行<code>npm install</code>就可以把需要的模組自己下載到項目內</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>cd node-tutorial-bootstrap-starter
+npm install
+</code></pre><h2 id="初始化bower"><a href="#初始化bower" class="headerlink" title="初始化bower"></a>初始化bower</h2><p>做法跟npm一樣，bower會產生另外一個叫<code>bower.json</code>的案檔，它的用途跟npm大同小異</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>bower init
+</code></pre><h2 id="安裝Bootstrap"><a href="#安裝Bootstrap" class="headerlink" title="安裝Bootstrap"></a>安裝Bootstrap</h2><p>有了bower以後，安裝bootstrap就很簡單了，首先我們用bower下載bootstrap</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>bower install bootstrap --save
+</code></pre><p>跟npm一樣，bower會產生一個名叫<code>bower_components</code>的資料夾儲存模組，新安裝的bootstrap也在裡面，由於bootstrap依賴jquery，所以jquery也會自動安裝到項目內，現在的目錄大概像這樣</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>node-tutorial-bootstrap-starter/
+├── bower_components/
+│   ├── bootstrap/
+│   └── jquery/
+├── node_modules/
+├── static/
+│   └── index.html
+├── bower.json
+├── package.json
+└── server.json
+</code></pre><h6 id="加入bootstrap"><a href="#加入bootstrap" class="headerlink" title="加入bootstrap"></a>加入bootstrap</h6><p>接著我們就要把它們加到<code>index.html</code>內</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;title&gt;&lt;/title&gt;
+
+    &lt;!-- Vendor Stylesheet --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;bower_components/bootstrap/dist/css/bootstrap.min.css&quot;&gt;
+
+    &lt;!-- Vendor JS --&gt;
+    &lt;script src=&quot;bower_components/jquery/dist/jquery.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;bower_components/bootstrap/dist/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div&gt;
+      &lt;h1&gt;嗨！世界！&lt;/h1&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><h6 id="使用bootstrap"><a href="#使用bootstrap" class="headerlink" title="使用bootstrap"></a>使用bootstrap</h6><p>使用bootstrap的時候我們只要插入相應的<code>class</code>便能插入它的樣式，例如我們想使用bootstrap風格的按鍵</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;title&gt;&lt;/title&gt;
+
+    &lt;!-- Vendor Stylesheet --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;bower_components/bootstrap/dist/css/bootstrap.min.css&quot;&gt;
+
+    &lt;!-- Vendor JS --&gt;
+    &lt;script src=&quot;bower_components/jquery/dist/jquery.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;bower_components/bootstrap/dist/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div&gt;
+      &lt;h1&gt;嗨！世界！&lt;/h1&gt;
+      &lt;button type=&quot;button&quot; class=&quot;btn btn-default&quot;&gt;默認風格&lt;/button&gt;
+      &lt;button type=&quot;button&quot; class=&quot;btn btn-primary&quot;&gt;主要風格&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><p>啟動伺服器，如果你還沒有的話</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>node server.js
+</code></pre><p>到<a href="http://localhost:3000" target="_blank" rel="external">http://localhost:3000</a>查看新的風格<br><img src="/posts/CSS框架篇：如何用Node.js寫一個網頁應用？/screen-1.png" alt="screen-1.png" title=""></p>
+<h2 id="Font-Awesome圖標"><a href="#Font-Awesome圖標" class="headerlink" title="Font Awesome圖標"></a>Font Awesome圖標</h2><p><a href="http://fontawesome.io/" target="_blank" rel="external">Font Awesome</a>是一個圖標庫，而它的用法跟bootstrap差不多，只需要增加<code>class</code>。上面我們用了bower，這次我們就來試一下CDN吧！只要你有CDN的連結就可以直接用了，我們直接插入到<code>&lt;head&gt;</code>內</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css&quot;&gt;
+</code></pre><p>很簡單就可以插入一個圖標</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>&lt;i class=&quot;fa fa-heart&quot;&gt;&lt;/i&gt;
+</code></pre><p>而且還能使圖標轉動，這樣就能製作載入中的效果</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>&lt;i class=&quot;fa fa-spinner fa-pulse fa-fw&quot;&gt;&lt;/i&gt;
+&lt;span class=&quot;sr-only&quot;&gt;載入中...&lt;/span&gt;
+</code></pre><p>稍為修改一下網頁，配合bootstrap應用</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;title&gt;&lt;/title&gt;
+
+    &lt;!-- Vendor Stylesheet --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;bower_components/bootstrap/dist/css/bootstrap.min.css&quot;&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css&quot;&gt;
+
+    &lt;!-- Vendor JS --&gt;
+    &lt;script src=&quot;bower_components/jquery/dist/jquery.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;bower_components/bootstrap/dist/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div class=&quot;container&quot;&gt;
+      &lt;h1&gt;嗨！世界！&lt;/h1&gt;
+      &lt;button type=&quot;button&quot; class=&quot;btn btn-default&quot;&gt;
+        &lt;i class=&quot;fa fa-heart&quot;&gt;&lt;/i&gt;
+      &lt;/button&gt;
+      &lt;button type=&quot;button&quot; class=&quot;btn btn-primary&quot;&gt;
+        &lt;i class=&quot;fa fa-spinner fa-pulse fa-fw&quot;&gt;&lt;/i&gt;
+        &lt;span class=&quot;sr-only&quot;&gt;載入中...&lt;/span&gt;載入中...
+      &lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><p>簡單幾步就能樣網頁變得沒那麼單調<br><img src="/posts/CSS框架篇：如何用Node.js寫一個網頁應用？/screen-2.png" alt="screen-2.png" title=""></p>
+</p></div><div class="container recommend"><h2>本篇完！有興趣閱讀其他文章嗎？</h2><ul class="related-posts"><li class="related-posts-item"><a href="/posts/起始篇：如何用Node.js寫一個網頁應用？/">起始篇：如何用Node.js寫一個網頁應用？</a></li><li class="related-posts-item"><a href="/posts/基礎篇：如何用Node.js寫一個網頁應用？/">基礎篇：如何用Node.js寫一個網頁應用？</a></li></div><div class="container"><div id="disqus_thread"></div></div><script>var disqus_config = function () {
+this.page.url = 'https://3rider.com/posts/CSS框架篇：如何用Node.js寫一個網頁應用？/';
+};
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://3rider-1.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();</script></div><footer id="site-footer"><div class="container">© Copyright 3rider.com. All rights reserved.</div></footer><script src="/js/vendor.js"></script><script src="/bower_components/typeahead.js/dist/typeahead.bundle.min.js"></script><script src="/bower_components/classie/classie.js"></script><script src="/js/script.js"></script><script src="/js/cse.js"></script><script id="dsq-count-scr" src="//3rider-1.disqus.com/count.js" async="async"></script><script src="http://127.0.0.1:35729/livereload.js?snipver=1"></script></body></html>

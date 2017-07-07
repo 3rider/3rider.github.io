@@ -4,6 +4,325 @@
   
     
     <entry>
+      <title><![CDATA[CSS框架篇：如何用Node.js寫一個網頁應用？]]></title>
+      <url>https://3rider.com/posts/CSS%E6%A1%86%E6%9E%B6%E7%AF%87%EF%BC%9A%E5%A6%82%E4%BD%95%E7%94%A8Node.js%E5%AF%AB%E4%B8%80%E5%80%8B%E7%B6%B2%E9%A0%81%E6%87%89%E7%94%A8%EF%BC%9F/</url>
+      <content type="html"><![CDATA[<p>相信介面（UI）設計是很多網頁開發者的弱點，更不用說用戶體驗了（UX）！在這個移動設備發達的年代大家都在說mobile-first，可想而之對於一個連CSS也只是略懂皮毛的新手到底是多大的難關，幸好！正因為這樣，出現了很多CSS框架（framework），讓我們不用幾乎不用碰CSS也能夠拼出一個不錯的介面</p>
+<h2 id="Bootstrap框架"><a href="#Bootstrap框架" class="headerlink" title="Bootstrap框架"></a>Bootstrap框架</h2><img src="/posts/CSS框架篇：如何用Node.js寫一個網頁應用？/bootstrap.jpg" alt="bootstrap.jpg" title="">
+<p>Bootstrap算是框架界的老字號了，網頁開發者很介意框架的容量，臃腫的框架會影響用戶體驗，但太輕量的框架幫助又不大，Bootstrap在這方面比較平衡，所以很多開發者選擇使用它。當然這也有好壞處，好處就是社群支援比較多，有很多snippet甚至template讓你免費使用，能幫你快速完成一個網頁，而壞處就是用框架可能會導至跟別人的網站很相似，失去個人風格。不過這也不是這篇教學的重點，而且對新手來說能跟別人的網頁看起來差不多好像也不壞吧？</p>
+<h2 id="自行託管vs雲端"><a href="#自行託管vs雲端" class="headerlink" title="自行託管vs雲端"></a>自行託管vs雲端</h2><p>使用一個客戶端模組普遍有兩種方法，第一種是self-hosted（自行託管），另一種是cloud hosted（雲端託管）。前者很容易理解，就是模組架下載到主機再使用；而後者通常會搭配<a href="https://en.wikipedia.org/wiki/Content_delivery_network" target="_blank" rel="external">CDN（Content delivery network）</a>技術，通過這技術會自動選擇最接近客戶端的緩存伺器服，讓客戶端能更快讀取檔案。</p>
+<h6 id="選擇哪一個？"><a href="#選擇哪一個？" class="headerlink" title="選擇哪一個？"></a>選擇哪一個？</h6><p>這個很視乎檔案的類型和用戶對象，用CDN可以減少網站的負擔，假如你的網站是全球性的，還可以提升平均讀取速度，增加可用性（availability），但依賴別人的服務需要考慮它的可靠性（Reliability），也要評估服務商的可信性。而自託雖然會吃伺服器的流量，但相對比較可靠，至少能連上網站道理上就能夠連上模組的檔案，所以在開發階段建議還是使用自託形式，免去不必要的等待時間，時間是很保貴的！</p>
+<h2 id="安裝Bower"><a href="#安裝Bower" class="headerlink" title="安裝Bower"></a>安裝Bower</h2><img src="/posts/CSS框架篇：如何用Node.js寫一個網頁應用？/bower.png" alt="bower.png" title="">
+<p>上一篇就提到npm這強大的模組管理系統，而另一個就叫bower，bower這東西其實快要被npm取代了，但它還有自己的好處，bower的原意是管理客戶端的模組，而npm則是Node的比較多，所以npm有時候會依賴Node的模組，如果不進行特別處理便無法在網頁上運行，而bower不會出現這樣的情況，那麼我們就一切從簡，用bower！</p>
+<h6 id="bower安裝指令"><a href="#bower安裝指令" class="headerlink" title="bower安裝指令"></a>bower安裝指令</h6><p>我們用以下指令安裝bower，<code>-g</code>是global的意思，安裝好了以後我們就可以直接在terminal使用這指令</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>npm install bower -g
+</code></pre><h2 id="下載Starter-project"><a href="#下載Starter-project" class="headerlink" title="下載Starter project"></a>下載Starter project</h2><p>這個starter project跟上一篇的原碼是一樣的，我們可以用git clone或是在<a href="https://github.com/3rider/node-tutorial-bootstrap-starter" target="_blank" rel="external">這裡下載</a>並解壓到<code>~/projects</code></p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>cd ~/projects
+git clone https://github.com/3rider/node-tutorial-bootstrap-starter.git
+</code></pre><h6 id="了解npm模組"><a href="#了解npm模組" class="headerlink" title="了解npm模組"></a>了解npm模組</h6><p>如果你還記得上一篇我做提到<code>npm install --save</code>，這裡就用到這儲存模組資訊的好處，首先我們來看看目前的結構</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>node-tutorial-bootstrap-starter/
+├── static/
+│   └── index.html
+├── package.json
+└── server.json
+</code></pre><p>你會發現這裡還沒有<code>node_modules</code>，為甚麼呢？我們在做團隊開發的時候經常要同步原碼，在同步的過程我們應該盡量減少需要同步的檔案，而這些固定不會被修改的模組檔案就是其中之一，所以我也沒有把這些檔案放到git。而關鍵就是package.json內儲存了的資訊，當中<code>dependencies</code>就表示這個項目依賴以下模組，而這次我們依賴express 4.15.3以上的版本</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>{
+  ...
+  &quot;dependencies&quot;: {
+    &quot;express&quot;: &quot;^4.15.3&quot;
+  }
+}
+</code></pre><p>接下來就方便了，我們只需要執行<code>npm install</code>就可以把需要的模組自己下載到項目內</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>cd node-tutorial-bootstrap-starter
+npm install
+</code></pre><h2 id="初始化bower"><a href="#初始化bower" class="headerlink" title="初始化bower"></a>初始化bower</h2><p>做法跟npm一樣，bower會產生另外一個叫<code>bower.json</code>的案檔，它的用途跟npm大同小異</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>bower init
+</code></pre><h2 id="安裝Bootstrap"><a href="#安裝Bootstrap" class="headerlink" title="安裝Bootstrap"></a>安裝Bootstrap</h2><p>有了bower以後，安裝bootstrap就很簡單了，首先我們用bower下載bootstrap</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>bower install bootstrap --save
+</code></pre><p>跟npm一樣，bower會產生一個名叫<code>bower_components</code>的資料夾儲存模組，新安裝的bootstrap也在裡面，由於bootstrap依賴jquery，所以jquery也會自動安裝到項目內，現在的目錄大概像這樣</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>node-tutorial-bootstrap-starter/
+├── bower_components/
+│   ├── bootstrap/
+│   └── jquery/
+├── node_modules/
+├── static/
+│   └── index.html
+├── bower.json
+├── package.json
+└── server.json
+</code></pre><h6 id="加入bootstrap"><a href="#加入bootstrap" class="headerlink" title="加入bootstrap"></a>加入bootstrap</h6><p>接著我們就要把它們加到<code>index.html</code>內</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;title&gt;&lt;/title&gt;
+
+    &lt;!-- Vendor Stylesheet --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;bower_components/bootstrap/dist/css/bootstrap.min.css&quot;&gt;
+
+    &lt;!-- Vendor JS --&gt;
+    &lt;script src=&quot;bower_components/jquery/dist/jquery.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;bower_components/bootstrap/dist/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div&gt;
+      &lt;h1&gt;嗨！世界！&lt;/h1&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><h6 id="使用bootstrap"><a href="#使用bootstrap" class="headerlink" title="使用bootstrap"></a>使用bootstrap</h6><p>使用bootstrap的時候我們只要插入相應的<code>class</code>便能插入它的樣式，例如我們想使用bootstrap風格的按鍵</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;title&gt;&lt;/title&gt;
+
+    &lt;!-- Vendor Stylesheet --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;bower_components/bootstrap/dist/css/bootstrap.min.css&quot;&gt;
+
+    &lt;!-- Vendor JS --&gt;
+    &lt;script src=&quot;bower_components/jquery/dist/jquery.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;bower_components/bootstrap/dist/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div&gt;
+      &lt;h1&gt;嗨！世界！&lt;/h1&gt;
+      &lt;button type=&quot;button&quot; class=&quot;btn btn-default&quot;&gt;默認風格&lt;/button&gt;
+      &lt;button type=&quot;button&quot; class=&quot;btn btn-primary&quot;&gt;主要風格&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><p>啟動伺服器，如果你還沒有的話</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>node server.js
+</code></pre><p>到<a href="http://localhost:3000" target="_blank" rel="external">http://localhost:3000</a>查看新的風格<br><img src="/posts/CSS框架篇：如何用Node.js寫一個網頁應用？/screen-1.png" alt="screen-1.png" title=""></p>
+<h2 id="Font-Awesome圖標"><a href="#Font-Awesome圖標" class="headerlink" title="Font Awesome圖標"></a>Font Awesome圖標</h2><p><a href="http://fontawesome.io/" target="_blank" rel="external">Font Awesome</a>是一個圖標庫，而它的用法跟bootstrap差不多，只需要增加<code>class</code>。上面我們用了bower，這次我們就來試一下CDN吧！只要你有CDN的連結就可以直接用了，我們直接插入到<code>&lt;head&gt;</code>內</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css&quot;&gt;
+</code></pre><p>很簡單就可以插入一個圖標</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>&lt;i class=&quot;fa fa-heart&quot;&gt;&lt;/i&gt;
+</code></pre><p>而且還能使圖標轉動，這樣就能製作載入中的效果</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>&lt;i class=&quot;fa fa-spinner fa-pulse fa-fw&quot;&gt;&lt;/i&gt;
+&lt;span class=&quot;sr-only&quot;&gt;載入中...&lt;/span&gt;
+</code></pre><p>稍為修改一下網頁，配合bootstrap應用</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;title&gt;&lt;/title&gt;
+
+    &lt;!-- Vendor Stylesheet --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;bower_components/bootstrap/dist/css/bootstrap.min.css&quot;&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css&quot;&gt;
+
+    &lt;!-- Vendor JS --&gt;
+    &lt;script src=&quot;bower_components/jquery/dist/jquery.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;bower_components/bootstrap/dist/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div class=&quot;container&quot;&gt;
+      &lt;h1&gt;嗨！世界！&lt;/h1&gt;
+      &lt;button type=&quot;button&quot; class=&quot;btn btn-default&quot;&gt;
+        &lt;i class=&quot;fa fa-heart&quot;&gt;&lt;/i&gt;
+      &lt;/button&gt;
+      &lt;button type=&quot;button&quot; class=&quot;btn btn-primary&quot;&gt;
+        &lt;i class=&quot;fa fa-spinner fa-pulse fa-fw&quot;&gt;&lt;/i&gt;
+        &lt;span class=&quot;sr-only&quot;&gt;載入中...&lt;/span&gt;載入中...
+      &lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><p>簡單幾步就能樣網頁變得沒那麼單調<br><img src="/posts/CSS框架篇：如何用Node.js寫一個網頁應用？/screen-2.png" alt="screen-2.png" title=""></p>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> nodejs,tutorial </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[基礎篇：如何用Node.js寫一個網頁應用？]]></title>
+      <url>https://3rider.com/posts/%E5%9F%BA%E7%A4%8E%E7%AF%87%EF%BC%9A%E5%A6%82%E4%BD%95%E7%94%A8Node.js%E5%AF%AB%E4%B8%80%E5%80%8B%E7%B6%B2%E9%A0%81%E6%87%89%E7%94%A8%EF%BC%9F/</url>
+      <content type="html"><![CDATA[<p>旅程開始我們要知道一些基本的知識，這裡當然就要知道你在寫的語言是甚麼吧！<br><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/boring.gif" alt="boring.gif" title=""><br>OK！我知道這很沉悶，有誰會想聽這些呢？但我想你至少搞清楚它們的分別，因為很多同學都傻傻的<strong>分不清楚伺服器端和客戶端</strong>，用Node.js的時候就更容易搞混了，因為兩邊都是用JS麻！首先我們看看維基百科的定義：</p>
+<blockquote>
+<p>Node.js是一個能夠在伺服器端運行JavaScript的開放原始碼、跨平台JavaScript執行環境。</p>
+</blockquote>
+<h2 id="Node-js與JavaScript"><a href="#Node-js與JavaScript" class="headerlink" title="Node.js與JavaScript"></a>Node.js與JavaScript</h2><p>簡而言之<strong>Node.js就是伺服器</strong>；而<strong>JavaScript是一種語言</strong>，是一種少數能夠讓瀏覽器閱讀的語言，所以我們客戶端可以用JavaScript編寫。</p>
+<p>然而在出現Node.js以前我們後端只能用PHP啊、JAVA啊甚麼的編寫，這代表開發一個網頁需要<strong>學習最少兩種語言</strong>，然後天才Ryan Dahl就想到既然我們一定要學習JavaScript，為甚麼後端不能用JavaScript寫呢？所以Node.js就這樣誕生了，Alhamdulilah！</p>
+<h2 id="客戶端、伺服器端？"><a href="#客戶端、伺服器端？" class="headerlink" title="客戶端、伺服器端？"></a>客戶端、伺服器端？</h2><p>所以說，客戶端就是別人看到的網頁，瀏覽器讀得懂的，就是客戶端；伺服器端故名思義就是伺服器，想要別人瀏覽你的網頁，你需要一個伺服器寄存你的檔案，包括html、JavaScript、CSS、圖片、影片…然而伺服器當然不止這些功能，它還會連接資料庫、處理請求、控制伺服器本機資訊等等，總之除了讓客戶看到的部份，其他基本上都是伺服器端。</p>
+<h2 id="教練！我好想寫網頁…"><a href="#教練！我好想寫網頁…" class="headerlink" title="教練！我好想寫網頁…"></a>教練！我好想寫網頁…</h2><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/slam-dunk-1.jpg" alt="slam-dunk-1.jpg" title="">
+<p>OK！我們這就開始練習寫第一個網頁！</p>
+<h6 id="1-建立項目資料夾"><a href="#1-建立項目資料夾" class="headerlink" title="1. 建立項目資料夾"></a>1. 建立項目資料夾</h6><p>首先我們要選擇一個項目的目錄，我個人喜歡放在<code>~/projects</code>的位置，假設這個項目叫<code>my-website</code></p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>mkdir -p ~/projects/my-website
+cd ~/projects/my-website
+</code></pre><h6 id="2-初始化NPM"><a href="#2-初始化NPM" class="headerlink" title="2. 初始化NPM"></a>2. 初始化NPM</h6><p>每次建立一個node.js項目都要初始化NPM(Node Package Manager)，詳情以後再說吧！執行下面指令後需要填寫項目的資料，我們先全部按<code>Enter</code>快速建立一個項目</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>npm init
+</code></pre><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/npm-init.png" alt="npm-init.png" title="">
+<p>這個指令將會產生<code>package.json</code>，這個檔案的作用是儲存這個項目的資訊，包括以後安裝的模組和版本</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>{
+  &quot;name&quot;: &quot;my-website&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;description&quot;: &quot;&quot;,
+  &quot;main&quot;: &quot;index.js&quot;,
+  &quot;scripts&quot;: {
+    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;
+  },
+  &quot;author&quot;: &quot;&quot;,
+  &quot;license&quot;: &quot;ISC&quot;
+}
+</code></pre><h6 id="3-建立靜態網頁"><a href="#3-建立靜態網頁" class="headerlink" title="3. 建立靜態網頁"></a>3. 建立靜態網頁</h6><p>最基本的靜態頁面就是<code>index.html</code>，所以我們建立一個放靜態文件的資料夾<code>static</code>，然後把<code>index.html</code>放到裡面</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>mkdir static
+touch static/index.html
+</code></pre><h6 id="4-設定atom"><a href="#4-設定atom" class="headerlink" title="4. 設定atom"></a>4. 設定atom</h6><p>這裡我們先暫停一下，先設定好你的編輯器，開啟atom，把<code>my-website</code>資料夾拖拉到視窗裡面，大概會變成這樣<br><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/atom-1.png" alt="atom-1.png" title=""></p>
+<p>在atom我們可以安裝各式各樣的插件，安裝方法是按下<code>ctrl + shift + p</code>，再輸入<code>install package</code><br><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/atom-2.png" alt="atom-2.png" title=""></p>
+<p>來到安裝插件的頁面，搜尋<code>emmet</code>並安裝，這個插件輔助我們自動完成一些常用的語句<br><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/atom-3.png" alt="atom-3.png" title=""></p>
+<h6 id="5-嗨！世界！"><a href="#5-嗨！世界！" class="headerlink" title="5. 嗨！世界！"></a>5. 嗨！世界！</h6><p>安裝好後我們回到<code>static/index.html</code>，輸入<code>html</code>，再按<code>Enter</code>就會自動生成html tags了！<br><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/atom-4.png" alt="atom-4.png" title=""><br><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/atom-5.png" alt="atom-5.png" title=""><br><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/magic.png" alt="magic.png" title=""></p>
+<p>最後在<code>&lt;body&gt;</code>內加入<code>嗨！世界！</code>的tag，這將會顯示在網頁上</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;title&gt;&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;嗨！世界！&lt;/h1&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><h2 id="建立伺服器"><a href="#建立伺服器" class="headerlink" title="建立伺服器"></a>建立伺服器</h2><p>來到這裡，我們還未能夠讓網頁在瀏覽器顯示出來…但已經不遠了！還記得讓我們的檔案需要一個地方寄存嗎？沒錯就是伺服器，我們又稱這類伺服器為web hosting、網存，接下來我們就來設定伺服器。<br><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/slam-dunk-2.jpg" alt="slam-dunk-2.jpg" title=""></p>
+<h6 id="6-安裝Express框架"><a href="#6-安裝Express框架" class="headerlink" title="6. 安裝Express框架"></a>6. 安裝Express框架</h6><p><a href="http://expressjs.com/" target="_blank" rel="external">Express</a>這個web框架在同行應該是無人不曉的了，不懂express不要跟其他人說你寫Node啊，它其中一個最重要的功能就是API，而且它簡化了很多設定，包括協助我們建立伺服器，express幾乎是Node.js網頁開發必備的模組了，我們用以下指令安裝</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>npm install express --save
+</code></pre><p>在這裡注意一下我們安裝別人的模組全部由npm管理，一句指令就能安裝，非常方便！要緊記在JS世界內很多功能都已經有人寫好了，<strong>不要每樣功能都自己重頭開始寫</strong>，想學習就多閱讀別人的原碼，我敢說JS開發者是最不吝嗇分享自己原碼的人了；另外<code>--save</code>的作用會把模組紀錄在<code>package.json</code>，否則只會安裝在項目的<code>node_modules</code>內而不會有任何紀錄，用途以後再說。</p>
+<h6 id="7-編寫伺服器"><a href="#7-編寫伺服器" class="headerlink" title="7. 編寫伺服器"></a>7. 編寫伺服器</h6><p>終於來到最後一步了，我們先建立存放伺服器原碼的檔案<code>server.js</code></p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>touch server.js
+</code></pre><p>這是<code>server.js</code>的原碼</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>// 使用express模組的function
+let express = require(&#39;express&#39;),
+    app = express();
+
+// 開放./static資料夾
+app.use(express.static(&#39;./static&#39;));
+
+// 啟動伺服器，連接埠是慣用的3000
+let server = app.listen(3000, () =&gt; {
+  let { address, port } = server.address();
+  console.log(`伺服器已建立${address}:${port}`);
+});
+</code></pre><p>這裡要注意一下當我們讀取模組的時候會使用<code>require(&#39;模組&#39;)</code>，而當中的值是基於作者而定的，最好的得知方法就是<strong>閱讀document</strong>，Node.js的文件的簡讀程度跟其他語言比較是首屈一指的，所以<strong>養成讀文件的習慣</strong>吧！而模組的檔案是放在<code>node_modules</code>內的，這資料夾內的檔案是不預計我們去修改的，所以<strong>請不要碰</strong>，當然我們可以自行寫模組，以後會再說。</p>
+<h2 id="運行伺服器"><a href="#運行伺服器" class="headerlink" title="運行伺服器"></a>運行伺服器</h2><p>這真的是最後了！執行以下指令便可以運行伺服器了！</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>node server
+</code></pre><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/run-node.png" alt="run-node.png" title="">
+<p>接著到<a href="http://localhost:3000" target="_blank" rel="external">http://localhost:3000</a>瀏覽我們<del>美麗</del>的網頁吧！<br><img src="/posts/基礎篇：如何用Node.js寫一個網頁應用？/hello-world.png" alt="hello-world.png" title=""></p>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> nodejs,tutorial </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[起始篇：如何用Node.js寫一個網頁應用？]]></title>
+      <url>https://3rider.com/posts/%E8%B5%B7%E5%A7%8B%E7%AF%87%EF%BC%9A%E5%A6%82%E4%BD%95%E7%94%A8Node.js%E5%AF%AB%E4%B8%80%E5%80%8B%E7%B6%B2%E9%A0%81%E6%87%89%E7%94%A8%EF%BC%9F/</url>
+      <content type="html"><![CDATA[<p>嗨！<br><img src="/posts/起始篇：如何用Node.js寫一個網頁應用？/wanna-write-website.png" alt="wanna-write-website.png" title=""><br>想寫嗎？想寫吧！這個教程將會逐步教你有效率地寫一個網頁應用，這將會是一場艱辛的旅程，做好覺悟了嗎？非常好，那麼我們就開始吧。</p>
+<h2 id="我是來自純白鎮的小智"><a href="#我是來自純白鎮的小智" class="headerlink" title="我是來自純白鎮的小智"></a>我是來自純白鎮的小智</h2><p>如果小智不是住在純白鎮，或許就不會成為出色的訓練員，也不會遇到他最重要的伙伴<del>小霞</del>pikachu了！所以說在哪裡開始是很重要的，寫網頁也是，所以要寫好一個網頁應用，第一步是選系統！</p>
+<p>如果你用的是Linux，這是個很明智的選擇；如果是Mac，你<del>很有錢</del>有可能會遇到一點麻煩，不過還是可以用的；如果你是用Windows，恭喜你，請你裝linux吧！<br><img src="/posts/起始篇：如何用Node.js寫一個網頁應用？/windows-bluescreen.png" alt="windows-bluescreen.png" title=""></p>
+<h2 id="為甚麼要用Linux？"><a href="#為甚麼要用Linux？" class="headerlink" title="為甚麼要用Linux？"></a>為甚麼要用Linux？</h2><p>用Linux的原因不是因為Windows會藍屏，也不是因為Mac很貴，而是︓</p>
+<ul>
+<li>Linux系統的指令比其他系統方便</li>
+<li>Node.js開發比較少出現環境問題</li>
+<li>網上社群優先支援Linux</li>
+<li>這篇教學會使用大量Linux指令</li>
+<li><strong>沒遊戲玩，讓你專心寫程式</strong></li>
+</ul>
+<h2 id="那麼…安裝哪個系統？"><a href="#那麼…安裝哪個系統？" class="headerlink" title="那麼…安裝哪個系統？"></a>那麼…安裝哪個系統？</h2><p>我建議你用Ubuntu16.04，可以在<a href="https://www.ubuntu.com/download/server" target="_blank" rel="external">這裡下載</a>，因為不是這篇教學的主旨，怎樣安裝我就不多說了，不想安裝雙系統就用虛擬主機吧！</p>
+<h3 id="VM-ware"><a href="#VM-ware" class="headerlink" title="VM ware"></a>VM ware</h3><p><a href="https://www.vmware.com/" target="_blank" rel="external">https://www.vmware.com/</a></p>
+<h3 id="Virtual-box"><a href="#Virtual-box" class="headerlink" title="Virtual box"></a>Virtual box</h3><p><a href="https://www.virtualbox.org/" target="_blank" rel="external">https://www.virtualbox.org/</a></p>
+<p>&nbsp;<br>這是Ubuntu的Unity桌面，配上<a href="https://numixproject.org/" target="_blank" rel="external">Numix主題</a>，顯得很現代化<br><img src="/posts/起始篇：如何用Node.js寫一個網頁應用？/ubuntu.png" alt="ubuntu.png" title=""></p>
+<h2 id="安裝Node-js"><a href="#安裝Node-js" class="headerlink" title="安裝Node.js"></a>安裝Node.js</h2><p>系統準備好了以後，我們立即安裝Node.js，但我們不會在官方下載，因為有更好的工具，它叫<a href="https://github.com/creationix/nvm" target="_blank" rel="external">nvm（Node Version Manager）</a>，比官方的更方便，而且可以自行選擇<del>御三家</del>Node.js的版本</p>
+<h6 id="1-安裝nvm"><a href="#1-安裝nvm" class="headerlink" title="1. 安裝nvm"></a>1. 安裝nvm</h6><p>打開你的terminal，輸入以下指令下載nvm</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
+</code></pre><p>然後再運行</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>export NVM_DIR=&quot;$HOME/.nvm&quot;
+[ -s &quot;$NVM_DIR/nvm.sh&quot; ] &amp;&amp; . &quot;$NVM_DIR/nvm.sh&quot; # This loads nvm
+</code></pre><p>全部都直接復制貼上就可以了，非常方便，最後可以用以下指令確認安裝是否成功</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>nvm
+</code></pre><img src="/posts/起始篇：如何用Node.js寫一個網頁應用？/nvm.png" alt="nvm.png" title="">
+<h6 id="2-用nvm安裝Node-js"><a href="#2-用nvm安裝Node-js" class="headerlink" title="2. 用nvm安裝Node.js"></a>2. 用nvm安裝Node.js</h6><p>再來就是安裝Node.js了，寫這篇的時候6.x是LTS版本，所以我們就安裝6好了，子版本不輸入會自動選擇安裝最新的版本</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>nvm install 6
+nvm use 6
+</code></pre><p>最後撿查一下是否裝了版本6</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>node -v
+</code></pre><img src="/posts/起始篇：如何用Node.js寫一個網頁應用？/node-version.png" alt="node-version.png" title="">
+<h2 id="編寫工具"><a href="#編寫工具" class="headerlink" title="編寫工具"></a>編寫工具</h2><p>我們很快就可以出發去冒險了！但在此之前請我們選擇一個適合Node.js的編寫工具，我看過很多同學在用Node Pad/++、Eclipse、Dreamweaver這些工具，我想說這些都已經過氣了！而且不適合做Node.js開發。這裡我有一些建議使用的工具</p>
+<h3 id="Sublime-Text-3"><a href="#Sublime-Text-3" class="headerlink" title="Sublime Text 3"></a>Sublime Text 3</h3><p><strong>官網</strong>：<a href="http://www.sublimetext.com/" target="_blank" rel="external">http://www.sublimetext.com/</a><br><strong>價錢</strong>：$70 USD</p>
+<p>我推薦sublime，最初我就是用sublime開發Node.js的，然後每次有新的編輯器我也會下載來試一下，最後還是會回到sublime。不是因為我付了錢，而是sublime的速度的確比其他快，而且也比較不吃記憶體，你可以親自下載試一下，試一下又不用錢的，<del>就像Windows一樣</del>，只是間中會有提示叫你買license<br><img src="/posts/起始篇：如何用Node.js寫一個網頁應用？/sublime-text-3.png" alt="sublime-text-3.png" title=""></p>
+<h3 id="Atom"><a href="#Atom" class="headerlink" title="Atom"></a>Atom</h3><p><strong>官網</strong>：<a href="https://atom.io" target="_blank" rel="external">https://atom.io</a><br><strong>價錢</strong>：免費</p>
+<p>第一這是免費的，而且使用的社群很大，這很重要因為很多輔助插件都是由社群開發，我們稱之為Community-driven development，就是由社群推動的開發，不錯用，但是我對記憶體使用量方面的評價有所保留，不過整體來說它是免費編輯器的第一首選，所以以後的教程都會用它來示範<br><img src="/posts/起始篇：如何用Node.js寫一個網頁應用？/atom.png" alt="atom.png" title=""></p>
+<h3 id="Visual-Studio-Code"><a href="#Visual-Studio-Code" class="headerlink" title="Visual Studio Code"></a>Visual Studio Code</h3><p><strong>官網</strong>：<a href="https://code.visualstudio.com/" target="_blank" rel="external">https://code.visualstudio.com/</a><br><strong>價錢</strong>：免費</p>
+<p>Visual Studio系列，微軟的親生子，很有VS風格，速度也不錯，但個人覺得不怎麼好用，尤其是它的directory tree，總之就是用不慣，喜歡VS的可以考慮這個<br><img src="/posts/起始篇：如何用Node.js寫一個網頁應用？/vs-code.png" alt="vs-code.png" title=""></p>
+<h2 id="安裝atom"><a href="#安裝atom" class="headerlink" title="安裝atom"></a>安裝atom</h2><p>如果你決定用atom，又是使用Ubuntu，可以用以下指令安裝</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>sudo add-apt-repository ppa:webupd8team/atom
+sudo apt-get update
+sudo apt-get install atom
+</code></pre><h2 id="嗨！世界！"><a href="#嗨！世界！" class="headerlink" title="嗨！世界！"></a>嗨！世界！</h2><p>到這裡你已做好準備收服小精靈了，最好的啟程方法當然就是Hello World!了，我們寫Node.js的時後會用JavaScript，所以extension默認就是.js，我們立即建立<code>index.js</code></p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>touch index.js
+</code></pre><p>這是<code>index.js</code>的原碼</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>console.log(&#39;嗨！世界！&#39;)
+</code></pre><p>最後執行指令運行</p>
+<p></p><p class="code-caption" data-lang="" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy="Copy Code"><span class="code-caption-label"></span></p><p></p>
+<pre><code>node index.js
+</code></pre><img src="/posts/起始篇：如何用Node.js寫一個網頁應用？/hello-world.png" alt="hello-world.png" title="">
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> nodejs,tutorial </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[Highcharts的一個Async Drilldown實例]]></title>
       <url>https://3rider.com/posts/Highcharts%E7%9A%84%E4%B8%80%E5%80%8BAsync%20Drilldown%E5%AF%A6%E4%BE%8B/</url>
       <content type="html"><![CDATA[<p><a href="http://www.highcharts.com/" target="_blank" rel="external">Highcharts</a>在使用簡易度和功能上在眾多圖表工具之中是比較平均的一個，而它的<a href="http://www.highcharts.com/docs/chart-concepts/drilldown" target="_blank" rel="external">drilldown功能</a>是其中一個讓我選擇使用它的原因，drilldown的概念就像是<strong>逐層探索</strong>數據，由一個big picture再進入較細緻的部份，要顯示這樣的數據就需要像Highcharts這樣的工具協助了</p>
